@@ -1,7 +1,23 @@
+local game_settings_dirty = false
+
+local function mark_game_settings_dirty()
+    if Network:is_server() then
+        game_settings_dirty = true
+    end
+end
+
+local function save_game_settings()
+    if game_settings_dirty then
+        game_settings_dirty = false
+        managers.savefile:save_game(managers.savefile:get_save_progress_slot())
+    end
+end
+
 local function publish_settings()
     if Network:is_server() then
         managers.network:session():chk_server_joinable_state()
         managers.network:update_matchmake_attributes()
+        mark_game_settings_dirty()
     end
 end
 
@@ -63,6 +79,18 @@ if string.lower(RequiredScript) == "lib/managers/menu/raid_menu/missionselection
     local _on_toggle_team_ai_original = MissionSelectionGui._on_toggle_team_ai
     local _set_settings_enabled_original = MissionSelectionGui._set_settings_enabled
     local _unselect_right_column_original = MissionSelectionGui._unselect_right_column
+    local _start_job_original = MissionSelectionGui._start_job
+    local _close_original = MissionSelectionGui.close
+
+    function MissionSelectionGui:_start_job(...)
+        game_settings_dirty = false
+        return _start_job_original(self, ...)
+    end
+
+    function MissionSelectionGui:close(...)
+        save_game_settings()
+        return _close_original(self, ...)
+    end
 
     function MissionSelectionGui:_on_save_selected(...)
         _on_save_selected_original(self, ...)
@@ -139,6 +167,7 @@ if string.lower(RequiredScript) == "lib/managers/menu/raid_menu/missionselection
         if old_value ~= value then
             WolfgangHUD:setSetting({ "GAME_SETTINGS", "TEAM_AI" }, value)
             WolfgangHUD:Save()
+            mark_game_settings_dirty()
 
             self._bots_amount_stepper:set_enabled(value)
             self:wg_update_bots_enabled(value)
@@ -284,6 +313,12 @@ elseif string.lower(RequiredScript) == "lib/managers/dynamicresourcemanager" the
     end
 elseif string.lower(RequiredScript) == "lib/managers/menu/raid_menu/raidmainmenugui" then
     local _layout_original = RaidMainMenuGui._layout
+    local _close_original = RaidMainMenuGui.close
+
+    function RaidMainMenuGui:close(...)
+        save_game_settings()
+        return _close_original(self, ...)
+    end
 
     function RaidMainMenuGui:_layout(...)
         self._settings_shown = false
