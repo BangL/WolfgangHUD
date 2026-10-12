@@ -155,6 +155,7 @@
 	"wolfganghud_waypoints_pickups_angle_title"						:				"Visible angle",
 	"wolfganghud_waypoints_pickups_distance_title"					:				"Visible distance",
 	"wolfganghud_waypoints_pickups_color_title"						:				"Color",
+	"wolfganghud_waypoints_pickups_hide_uninteractable_title"		:				"Hide when not pickable",
 	"wolfganghud_waypoints_show_pickups_revives_title"				:				"Show Revive-Packs",
 	"wolfganghud_waypoints_revives_color_title"						:				"Revives Color",
 	"wolfganghud_waypoints_loot_name"								:			"Heavy objects",

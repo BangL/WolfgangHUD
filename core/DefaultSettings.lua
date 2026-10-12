@@ -115,6 +115,7 @@ if WolfgangHUD then
 				ANGLE							= 35,
 				DISTANCE						= 3000,
 				COLOR							= "white",
+				HIDE_UNINTERACTABLE				= true,
 				REVIVES							= true,
 				REVIVES_COLOR					= "light_green",
 			},

@@ -194,7 +194,8 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 					unit = data.unit,
 					offset = icon_data.offset or
 						Vector3(0, 0, WolfgangHUD:getSetting({ "CustomWaypoints", "PICKUPS", "OFFSET" }, 15)),
-					hide_on_uninteractable = true,
+					hide_on_uninteractable = WolfgangHUD:getSetting(
+						{ "CustomWaypoints", "PICKUPS", "HIDE_UNINTERACTABLE" }, true),
 					visible_through_walls = debug,
 					scale = 1.25,
 					alpha = settings.alpha,

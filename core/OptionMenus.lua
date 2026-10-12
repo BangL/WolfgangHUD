@@ -1115,6 +1115,15 @@ if WolfgangHUD then
 							},
 							{
 								type = "toggle",
+								name_id = "wolfganghud_waypoints_pickups_hide_uninteractable_title",
+								value = {"CustomWaypoints", "PICKUPS", "HIDE_UNINTERACTABLE"},
+								visible_reqs = {},
+								enabled_reqs = {
+									{setting = {"CustomWaypoints", "PICKUPS", "SHOW"}, invert = false},
+								},
+							},
+							{
+								type = "toggle",
 								name_id = "wolfganghud_waypoints_show_pickups_revives_title",
 								value = {"CustomWaypoints", "PICKUPS", "REVIVES"},
 								visible_reqs = {},
