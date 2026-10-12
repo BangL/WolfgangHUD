@@ -143,7 +143,7 @@ if string.lower(RequiredScript) == "lib/units/enemies/cop/copdamage" then
 					},
 					component_order = {WolfgangHUD:getSetting({"HUD", "DamagePopup", "SKULL_ALIGN"}, 2) == 1 and {"icon", "label"} or {"label", "icon"}, {"duration"}}
 				}
-				managers.waypoints:add_waypoint(id, "CustomWaypoint", params)
+				managers.waypoints:add_waypoint(id, "CustomWaypoint", params, true)
 			end
 		end
 	end

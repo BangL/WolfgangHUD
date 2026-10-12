@@ -148,8 +148,8 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 						component_order = { { "icon", "amount", "label" }, { "debug_txt" } },
 					}
 
-					managers.waypoints:add_waypoint(id, "CustomWaypoint", params)
-					table.insert(self._custom_waypoints_loot, id)
+					managers.waypoints:add_waypoint(id, "CustomWaypoint", params, true)
+					self._custom_waypoints_loot[id] = true
 				end
 			end
 		elseif managers.waypoints:get_waypoint(id) then
@@ -159,6 +159,7 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 				managers.waypoints:set_waypoint_component_setting(id, "amount", "show", (count > 1))
 			elseif event == "remove" then
 				managers.waypoints:remove_waypoint(id)
+				self._custom_waypoints_loot[id] = nil
 			end
 		end
 	end
@@ -219,11 +220,12 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 					component_order = { { "icon" }, { "debug_txt" } },
 				}
 
-				managers.waypoints:add_waypoint(id, "CustomWaypoint", params)
-				table.insert(self._custom_waypoints_pickups, id)
+				managers.waypoints:add_waypoint(id, "CustomWaypoint", params, true)
+				self._custom_waypoints_pickups[id] = true
 			end
 		elseif event == "remove" then
 			managers.waypoints:remove_waypoint(id)
+			self._custom_waypoints_pickups[id] = nil
 		end
 	end
 
@@ -242,7 +244,7 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 		if HUDManager.CUSTOM_WAYPOINTS.DEBUGGING ~= enable then
 			HUDManager.CUSTOM_WAYPOINTS.DEBUGGING = enable
 			local loot_settings = self:make_loot_waypoint_settings(enable)
-			for _, id in ipairs(self._custom_waypoints_loot) do
+			for id in pairs(self._custom_waypoints_loot) do
 				managers.waypoints:set_waypoint_setting(id, "alpha", loot_settings.alpha)
 				managers.waypoints:set_waypoint_setting(id, "visible_through_walls", enable)
 				managers.waypoints:set_waypoint_setting(id, "visible_distance", { max = loot_settings.distance })
@@ -252,7 +254,7 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 				managers.waypoints:set_waypoint_component_setting(id, "debug_txt", "show", enable)
 			end
 			local pickups_settings = self:make_pickups_waypoint_settings(enable)
-			for _, id in ipairs(self._custom_waypoints_pickups) do
+			for id in pairs(self._custom_waypoints_pickups) do
 				managers.waypoints:set_waypoint_setting(id, "alpha", pickups_settings.alpha)
 				managers.waypoints:set_waypoint_setting(id, "visible_through_walls", enable)
 				managers.waypoints:set_waypoint_setting(id, "visible_distance", { max = pickups_settings.distance })
