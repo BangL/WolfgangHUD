@@ -1238,6 +1238,13 @@ if WolfgangHUD then
 					},
 					{
 						type = "toggle",
+						name_id = "wolfganghud_waiting_info_title",
+						value = {"MENU", "WAITING_INFO"},
+						visible_reqs = {},
+						enabled_reqs = {},
+					},
+					{
+						type = "toggle",
 						name_id = "wolfganghud_streamline_menu_title",
 						value = {"MENU", "STREAMLINE"},
 						visible_reqs = {},
