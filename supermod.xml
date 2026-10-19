@@ -155,6 +155,14 @@
 				<post hook_id="lib/managers/hud/hudloadingscreen"/>
 			</group>
 
+			<group :script_path="Sync.lua">
+				<post hook_id="lib/network/base/basenetworksession"/>
+			</group>
+
+			<group :script_path="EndStats.lua">
+				<post hook_id="lib/managers/statisticsmanager"/>
+			</group>
+
 			<group :script_path="InstantRestart.lua">
 				<post hook_id="lib/tweak_data/tweakdata"/>
 			</group>

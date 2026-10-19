@@ -1244,6 +1244,18 @@ if WolfgangHUD then
 						enabled_reqs = {},
 					},
 					{
+						type = "multi_choice",
+						name_id = "wolfganghud_end_stats_title",
+						value = {"MENU", "END_STATS"},
+						visible_reqs = {},
+						enabled_reqs = {},
+						options = {
+							"wolfganghud_end_stats_off",
+							"wolfganghud_end_stats_local",
+							"wolfganghud_end_stats_chat",
+						},
+					},
+					{
 						type = "toggle",
 						name_id = "wolfganghud_streamline_menu_title",
 						value = {"MENU", "STREAMLINE"},

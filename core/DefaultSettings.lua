@@ -74,6 +74,7 @@ if WolfgangHUD then
 		MENU = {
 			SKIP_INTRO							= true,
 			WAITING_INFO						= true,
+			END_STATS							= 2,
 			STREAMLINE							= true,
 			ADD_JOIN_MENU_OFFLINE				= true,
 			READY_UP_ON_NUM_ENTER				= true,
