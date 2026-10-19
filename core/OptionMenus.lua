@@ -1238,6 +1238,24 @@ if WolfgangHUD then
 					},
 					{
 						type = "toggle",
+						name_id = "wolfganghud_streamline_menu_title",
+						value = {"MENU", "STREAMLINE"},
+						visible_reqs = {},
+						enabled_reqs = {},
+					},
+					{
+						type = "toggle",
+						name_id = "wolfganghud_add_join_menu_offline_title",
+						value = {"MENU", "ADD_JOIN_MENU_OFFLINE"},
+						visible_reqs = {},
+						enabled_reqs = {},
+						},
+					{ -- In-Game
+						type = "header",
+						text_id = "wolfganghud_menu_ingame_name",
+					},
+					{
+						type = "toggle",
 						name_id = "wolfganghud_waiting_info_title",
 						value = {"MENU", "WAITING_INFO"},
 						visible_reqs = {},
@@ -1253,25 +1271,7 @@ if WolfgangHUD then
 							"wolfganghud_end_stats_off",
 							"wolfganghud_end_stats_local",
 							"wolfganghud_end_stats_chat",
-						},
 					},
-					{
-						type = "toggle",
-						name_id = "wolfganghud_streamline_menu_title",
-						value = {"MENU", "STREAMLINE"},
-						visible_reqs = {},
-						enabled_reqs = {},
-					},
-					{
-						type = "toggle",
-						name_id = "wolfganghud_add_join_menu_offline_title",
-						value = {"MENU", "ADD_JOIN_MENU_OFFLINE"},
-						visible_reqs = {},
-						enabled_reqs = {},
-					},
-					{ -- In-Game
-						type = "header",
-						text_id = "wolfganghud_menu_ingame_name",
 					},
 					{
 						type = "toggle",
