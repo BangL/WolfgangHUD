@@ -155,6 +155,10 @@
 				<post hook_id="lib/managers/hud/hudloadingscreen"/>
 			</group>
 
+			<group :script_path="ChatTweaks.lua">
+				<post hook_id="lib/managers/hud/hudchat"/>
+			</group>
+
 			<group :script_path="Sync.lua">
 				<post hook_id="lib/network/base/basenetworksession"/>
 			</group>
