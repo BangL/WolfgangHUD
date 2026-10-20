@@ -4,7 +4,13 @@
 -- host ever sees everyone's numbers (NetworkPeer:statistics()). So every
 -- WolfgangHUD sends its own exact numbers to the other WolfgangHUDs
 -- (WolfgangHUD.Sync), whatever its own mode is. Players without WolfgangHUD
--- are filled in from the host's statistics, if we are the host.
+-- are filled in from the host's statistics, if we are the host. A host with
+-- WolfgangHUD also relays what it knows about the others to the WolfgangHUD
+-- clients, so they have those players too. Last resort is our own count of the
+-- kills we saw, marked as an estimate.
+--
+-- Priority of the numbers of a player: its own WolfgangHUD > the host's view
+-- (the game's own statistics if we are the host, the relay otherwise) > estimate.
 --
 -- Modes: 1 = off, 2 = shown to ourselves only, 3 = posted to chat for everyone.
 -- Only one player posts to chat: everyone set to do so waits by peer id (the
@@ -27,15 +33,41 @@ if string.lower(RequiredScript) == "lib/managers/statisticsmanager" then
 
 	EndStats.CALL_ID = "wolfganghud_end_stats"
 	EndStats.EVENT_DATA = "end_stats_data" -- our own exact numbers
+	EndStats.RELAY_MAX_WAIT = 5 -- the host does not wait for the slowest client longer than this
+	EndStats.RELAY_CALL_ID = "wolfganghud_end_stats_relay"
+	EndStats.EVENT_RELAY = "end_stats_relay" -- the host's numbers of the players without WolfgangHUD
 	EndStats.EVENT_POSTED = "end_stats_posted" -- we post the stats to chat
 
 	function EndStats:mode()
 		return WolfgangHUD:getSetting({"MENU", "END_STATS"}, EndStats.MODE_LOCAL)
 	end
 
+	EndStats._observed = EndStats._observed or {} -- peer_id -> kills we saw it make this mission
+
+	function EndStats:reset_observed()
+		self._observed = {}
+	end
+
+	function EndStats:observe_kill(peer_id, is_special, headshot)
+		if not peer_id then
+			return
+		end
+		local seen = self._observed[peer_id]
+		if not seen then
+			seen = {kills = 0, specials_kills = 0, head_shots = 0}
+			self._observed[peer_id] = seen
+		end
+		seen.kills = seen.kills + 1
+		seen.specials_kills = seen.specials_kills + (is_special and 1 or 0)
+		seen.head_shots = seen.head_shots + (headshot and 1 or 0)
+	end
+
 	function EndStats:reset()
 		DelayedCalls:Remove(self.CALL_ID)
+		DelayedCalls:Remove(self.RELAY_CALL_ID)
 		self._stats = {}
+		self._relayed = {}
+		self._relay = nil
 		self._posted_by_other = false
 		self._reported = false
 		self._start_t = nil
@@ -61,14 +93,75 @@ if string.lower(RequiredScript) == "lib/managers/statisticsmanager" then
 		if not stats then
 			return "n/a"
 		end
-		return string.format("Kills %d | Spec %d | HS %d | Acc %d%% | Downs %d | Revives %d",
-			stats.kills or 0, stats.specials_kills or 0, stats.head_shots or 0,
-			stats.accuracy or 0, stats.downs or 0, stats.revives or 0)
+		local function num(value)
+			return value and tostring(value) or "?"
+		end
+		return string.format("Kills %s | Spec %s | HS %s | Acc %s | Downs %s | Revives %s%s",
+			num(stats.kills), num(stats.specials_kills), num(stats.head_shots),
+			stats.accuracy and (stats.accuracy .. "%") or "?", num(stats.downs), num(stats.revives),
+			stats.estimated and " (est.)" or "")
 	end
 
-	-- Ours and the other WolfgangHUDs' exact numbers first, the host's view otherwise
+	-- Numbers that came from the player itself or from the host
+	function EndStats:exact_of(peer)
+		return self._stats[peer:id()] or self._relayed[peer:id()] or peer:statistics()
+	end
+
+	-- Exact numbers first, what we saw of the player otherwise
 	function EndStats:stats_of(peer)
-		return self._stats[peer:id()] or peer:statistics()
+		local exact = self:exact_of(peer)
+		if exact then
+			return exact
+		end
+		local seen = self._observed[peer:id()] or {kills = 0, specials_kills = 0, head_shots = 0}
+		return {
+			kills = seen.kills,
+			specials_kills = seen.specials_kills,
+			head_shots = seen.head_shots,
+			estimated = true,
+		}
+	end
+
+	local function clean(data)
+		return {
+			kills = tonumber(data.kills),
+			specials_kills = tonumber(data.specials_kills),
+			head_shots = tonumber(data.head_shots),
+			accuracy = tonumber(data.accuracy),
+			downs = tonumber(data.downs),
+			revives = tonumber(data.revives),
+		}
+	end
+
+	-- The host's view of the players without WolfgangHUD, once it has it (or gave up waiting)
+	function EndStats:try_relay()
+		local session = managers.network and managers.network:session()
+		if not session or not Network:is_server() or self._relay then
+			return
+		end
+
+		local unknown = {}
+		local complete = true
+		for _, peer in pairs(session:all_peers()) do
+			if peer ~= session:local_peer() and not WolfgangHUD.Sync.peers[peer:id()] then
+				local stats = peer:statistics()
+				if stats then
+					unknown[tostring(peer:id())] = stats
+				else
+					complete = false
+				end
+			end
+		end
+
+		if not complete and Application:time() - self._start_t < self.RELAY_MAX_WAIT then
+			DelayedCalls:Add(self.RELAY_CALL_ID, self.POLL, function()
+				EndStats:try_relay()
+			end)
+			return
+		end
+
+		self._relay = {peers = unknown}
+		WolfgangHUD.Sync:send_to_all_discovered_peers(self.EVENT_RELAY, self._relay)
 	end
 
 	function EndStats:start(statistics)
@@ -98,6 +191,7 @@ if string.lower(RequiredScript) == "lib/managers/statisticsmanager" then
 			rank = rank + #WolfgangHUD.Sync.peers + 1
 		end
 		self:schedule(self.DELAY + rank * self.DELAY_PER_PEER)
+		self:try_relay()
 	end
 
 	function EndStats:schedule(delay)
@@ -106,10 +200,11 @@ if string.lower(RequiredScript) == "lib/managers/statisticsmanager" then
 		end)
 	end
 
-	-- Waiting for: players with WolfgangHUD, and everyone if we are the host
+	-- Waiting for: players with WolfgangHUD, everyone if we are the host, everyone if the host has WolfgangHUD
 	function EndStats:missing_data(session)
+		local host_relays = not Network:is_server() and WolfgangHUD.Sync.peers[session:server_peer():id()]
 		for _, peer in pairs(session:all_peers()) do
-			if not self:stats_of(peer) and (Network:is_server() or WolfgangHUD.Sync.peers[peer:id()]) then
+			if not self:exact_of(peer) and (Network:is_server() or host_relays or WolfgangHUD.Sync.peers[peer:id()]) then
 				return true
 			end
 		end
@@ -158,14 +253,21 @@ if string.lower(RequiredScript) == "lib/managers/statisticsmanager" then
 
 	WolfgangHUD.SyncListeners[EndStats.EVENT_DATA] = function(peer_id, data)
 		if EndStats._stats then
-			EndStats._stats[peer_id] = {
-				kills = tonumber(data.kills),
-				specials_kills = tonumber(data.specials_kills),
-				head_shots = tonumber(data.head_shots),
-				accuracy = tonumber(data.accuracy),
-				downs = tonumber(data.downs),
-				revives = tonumber(data.revives),
-			}
+			EndStats._stats[peer_id] = clean(data)
+		end
+	end
+
+	WolfgangHUD.SyncListeners[EndStats.EVENT_RELAY] = function(peer_id, data)
+		local session = managers.network and managers.network:session()
+		-- only the host knows
+		if not session or not EndStats._relayed or peer_id ~= session:server_peer():id() or type(data.peers) ~= "table" then
+			return
+		end
+		for id, stats in pairs(data.peers) do
+			id = tonumber(id)
+			if id and type(stats) == "table" then
+				EndStats._relayed[id] = clean(stats)
+			end
 		end
 	end
 
@@ -180,6 +282,9 @@ if string.lower(RequiredScript) == "lib/managers/statisticsmanager" then
 		if mine then
 			WolfgangHUD.Sync:send_to_peer(peer_id, EndStats.EVENT_DATA, mine)
 		end
+		if EndStats._relay then
+			WolfgangHUD.Sync:send_to_peer(peer_id, EndStats.EVENT_RELAY, EndStats._relay)
+		end
 	end
 
 	EndStats:reset()
@@ -193,6 +298,7 @@ if string.lower(RequiredScript) == "lib/managers/statisticsmanager" then
 	local clear_peer_statistics_original = StatisticsManager.clear_peer_statistics
 	function StatisticsManager:clear_peer_statistics(...)
 		WolfgangHUD.EndStats:reset()
+		WolfgangHUD.EndStats:reset_observed()
 		return clear_peer_statistics_original(self, ...)
 	end
 

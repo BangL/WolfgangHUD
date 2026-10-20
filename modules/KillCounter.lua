@@ -39,6 +39,14 @@ if string.lower(RequiredScript) == "lib/units/enemies/cop/copdamage" then
 				local body = data.col_ray and data.col_ray.body or self._sync_ibody_killcount and self._unit:body(self._sync_ibody_killcount)
 				local headshot = body and self.is_head and self:is_head(body) or false
 
+				local end_stats = WolfgangHUD.EndStats
+				if end_stats then
+					local crim_data = managers.criminals:character_data_by_unit(killer)
+					if crim_data and not crim_data.ai then
+						end_stats:observe_kill(managers.criminals:character_peer_id_by_unit(killer), is_special, headshot)
+					end
+				end
+
 				if killer:in_slot(2) then
 					managers.hud:increment_teammate_kill_count(HUDManager.PLAYER_PANEL, is_special, headshot)
 				else
@@ -123,6 +131,9 @@ elseif string.lower(RequiredScript) == "lib/managers/raidjobmanager" then
 		on_mission_started_original(self, ...)
 		if managers.hud then
 			managers.hud:reset_kill_counters()
+		end
+		if WolfgangHUD.EndStats then
+			WolfgangHUD.EndStats:reset_observed()
 		end
 	end
 
