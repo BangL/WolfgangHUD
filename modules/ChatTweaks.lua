@@ -511,6 +511,25 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudchat" then
 		piece(right, w - cap_w, cap_w, {rect[1] + rect[3] - cap, rect[2], cap, rect[4]})
 	end
 
+	-- The background bitmap has the size of its texture, stretch it over the whole chat
+	function ChatTweaks:fit_background(chat)
+		local background = chat._object:child("background")
+		if background then
+			background:set_shape(0, 0, chat._object:w(), chat._object:h())
+		end
+	end
+
+	-- "X is typing..." sits in the free strip under the input box
+	function ChatTweaks:place_typing(chat)
+		local typing = chat._object:child("wolfganghud_typing")
+		if typing then
+			typing:set_w(chat._object:w() - HUDChat.CHAT_BOX_PADDING * 2)
+			typing:set_h(HUDChat.CHAT_BOX_PADDING)
+			typing:set_x(HUDChat.CHAT_BOX_PADDING)
+			typing:set_bottom(chat._object:h())
+		end
+	end
+
 	-- Height of the HUD chat, the bottom edge stays where it is
 	function ChatTweaks:apply_height(chat)
 		local height = self:height()
@@ -525,10 +544,8 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudchat" then
 		chat._message_panel:set_h(height - chat._input_panel:h())
 		chat._message_panel:set_y(0)
 
-		local typing = chat._object:child("wolfganghud_typing")
-		if typing then
-			typing:set_bottom(height - chat._input_panel:h() + HUDChat.CHAT_BOX_PADDING / 2)
-		end
+		self:fit_background(chat)
+		self:place_typing(chat)
 		chat._wh_scroll = 0
 	end
 
@@ -552,10 +569,8 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudchat" then
 		chat._input_text:set_w(chat._input_text_panel:w() - HUDChat.INPUT_TEXT_X - HUDChat.INPUT_TEXT_PADDING_RIGHT)
 		chat:_layout_input_text()
 
-		local typing = chat._object:child("wolfganghud_typing")
-		if typing then
-			typing:set_w(message_w)
-		end
+		self:fit_background(chat)
+		self:place_typing(chat)
 		self:update_scrollbar(chat)
 
 		-- input box: the original bitmap at the vanilla width, the three pieces otherwise
@@ -712,7 +727,7 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudchat" then
 
 	-- ============ HUDChat: creation ============
 
-	-- In the strip above the input box, outside input_panel, which dims when unfocused
+	-- In the strip under the input box, outside input_panel, which dims when unfocused
 	local function create_typing_text(chat)
 		local font_size = ChatTweaks.TYPING_FONT_SIZE
 		local text = chat._object:text({
@@ -725,10 +740,7 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudchat" then
 			font = tweak_data.gui:get_font_path(tweak_data.gui.fonts.lato, font_size),
 			font_size = font_size,
 		})
-		text:set_w(chat._object:w() - HUDChat.CHAT_BOX_PADDING * 2)
-		text:set_h(HUDChat.CHAT_BOX_PADDING / 2)
-		text:set_x(HUDChat.CHAT_BOX_PADDING)
-		text:set_bottom(chat._object:h() - chat._input_panel:h() + HUDChat.CHAT_BOX_PADDING / 2)
+		ChatTweaks:place_typing(chat)
 		text:animate(animate_typing)
 	end
 
@@ -769,6 +781,7 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudchat" then
 		if width ~= DEFAULT_WIDTH then
 			ChatTweaks:widen_input_background(self)
 		end
+		ChatTweaks:fit_background(self)
 		create_typing_text(self)
 		create_scrollbar(self)
 	end
