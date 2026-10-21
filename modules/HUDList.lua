@@ -376,6 +376,24 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 		end
 	end
 
+	function HUDListManager:destroy()
+		local function destroy_items(list)
+			for _, item in pairs(list:items()) do
+				if item.items then
+					destroy_items(item)
+				else
+					item:destroy()
+				end
+			end
+			list:destroy()
+		end
+
+		for _, list in pairs(self._lists) do
+			destroy_items(list)
+		end
+		self._lists = {}
+	end
+
 	function HUDListManager:register_list(name, class, params, ...)
 		if not self._lists[name] then
 			class = type(class) == "string" and _G.HUDList[class] or class
@@ -1651,6 +1669,10 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 	end
 
 	function HUDList.RightListItem:change_count(diff)
+		if not alive(self._text) then
+			return
+		end
+
 		self:set_count(self._count + diff)
 
 		if diff ~= 0 then
@@ -1660,6 +1682,10 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 	end
 
 	function HUDList.RightListItem:set_count(num)
+		if not alive(self._text) then
+			return
+		end
+
 		self._count = num
 		self._text:set_text(tostring(self._count))
 		self:set_active(self._count > 0)
@@ -2017,4 +2043,15 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 	function PanelFrame:set_center_y(v) self._panel:set_center_y(v) end
 	function PanelFrame:set_visible(v) self._panel:set_visible(v) end
 	function PanelFrame:set_layer(v) self._panel:set_layer(v) end
+elseif string.lower(RequiredScript) == "lib/setups/gamesetup" then
+	local destroy_original = GameSetup.destroy
+
+	function GameSetup:destroy(...)
+		if managers.hudlist then
+			managers.hudlist:destroy()
+			managers.hudlist = nil
+		end
+		return destroy_original(self, ...)
+	end
+
 end

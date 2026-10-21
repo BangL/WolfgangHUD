@@ -13,6 +13,14 @@ if string.lower(RequiredScript) == "lib/setups/gamesetup" then
 		end
 	end
 
+	local destroy_original = GameSetup.destroy
+	function GameSetup:destroy(...)
+		if managers.fhb and managers.fhb.destroy then
+			managers.fhb:destroy()
+		end
+		return destroy_original(self, ...)
+	end
+
 	local update_original = GameSetup.update
 	function GameSetup:update(t, dt)
 		update_original(self, t, dt)
@@ -41,6 +49,16 @@ if string.lower(RequiredScript) == "lib/setups/gamesetup" then
 	function FloatingHealthBarManager:init(managers)
 		self._ws = managers.gui_data:create_fullscreen_workspace()
 		self.pnl = self._ws:panel():panel({name = 'dmg_sheet', layer = 4})
+		self.floats = {}
+		self.smokes = {}
+	end
+
+	function FloatingHealthBarManager:destroy()
+		if alive(self._ws) then
+			managers.gui_data:destroy_workspace(self._ws)
+		end
+		self._ws = nil
+		self.pnl = nil
 		self.floats = {}
 		self.smokes = {}
 	end

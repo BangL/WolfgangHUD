@@ -90,6 +90,7 @@
 
 			<group :script_path="HUDList.lua">
 				<post hook_id="lib/managers/hudmanagerpd2" />
+				<post hook_id="lib/setups/gamesetup" />
 			</group>
 
 			<group :script_path="HUDSuspicion.lua">
