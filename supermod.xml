@@ -214,6 +214,14 @@
 				<post hook_id="lib/managers/menu/raid_menu/controls/raidguicontrolmeleeweaponstats"/>
 				<post hook_id="lib/managers/menu/raid_menu/controls/raidguicontrolgrenadeweaponstats"/>
 			</group>
+
+			<group :script_path="WeaponStatsDiff.lua">
+				<post hook_id="lib/managers/menu/raid_menu/weaponselectiongui"/>
+			</group>
+
+			<group :script_path="WeaponSkillPreviewFix.lua">
+				<post hook_id="lib/managers/menu/raid_menu/weaponselectiongui"/>
+			</group>
 		</group>
 	</hooks>
 

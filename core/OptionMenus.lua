@@ -1420,6 +1420,20 @@ if WolfgangHUD then
 					},
 					{
 						type = "toggle",
+						name_id = "wolfganghud_show_weapon_stat_diff_title",
+						value = {"MENU", "SHOW_WEAPON_STAT_DIFF"},
+						visible_reqs = {},
+						enabled_reqs = {},
+					},
+					{
+						type = "toggle",
+						name_id = "wolfganghud_fix_skill_preview_title",
+						value = {"MENU", "FIX_SKILL_PREVIEW"},
+						visible_reqs = {},
+						enabled_reqs = {},
+					},
+					{
+						type = "toggle",
 						name_id = "wolfganghud_convert_sizes_meters_title",
 						value = {"MENU", "CONVERT_SIZES_TO_METERS"},
 						visible_reqs = {},

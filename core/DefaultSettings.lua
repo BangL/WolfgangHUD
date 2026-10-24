@@ -80,6 +80,8 @@ if WolfgangHUD then
 			READY_UP_ON_NUM_ENTER				= true,
 			MARK_STEALTHABLES					= true,
 			SHOW_HIDDEN_WEAPON_STATS			= true,
+			SHOW_WEAPON_STAT_DIFF				= true,
+			FIX_SKILL_PREVIEW					= true,
 			CONVERT_SIZES_TO_METERS				= true,
 		},
 		HUDList = {

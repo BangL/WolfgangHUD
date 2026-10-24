@@ -10,6 +10,15 @@ if string.lower(RequiredScript) == "lib/managers/menu/raid_menu/controls/raidgui
     RaidGUIControlWeaponStats.WGFLAG_GRENADES = 2
     RaidGUIControlWeaponStats.WGFLAG_MELEE = 3
 
+    function RaidGUIControlWeaponStats.wg_color_delta(item, delta)
+        item:set_label_default_color()
+
+        local label = item._label._label_value_with_delta
+        if label and delta ~= 0 then
+            label:set_color(delta > 0 and tweak_data.gui.colors.progress_green or tweak_data.gui.colors.progress_red)
+        end
+    end
+
     local function f2s(val)
         return tostring(math.round_with_precision(val, 1))
     end
@@ -93,6 +102,7 @@ if string.lower(RequiredScript) == "lib/managers/menu/raid_menu/controls/raidgui
         self._wg_flag = self._wg_flag or RaidGUIControlWeaponStats.WGFLAG_WEAPONS
         self._wg_show_hidden_stats = WolfgangHUD:getSetting({ "MENU", "SHOW_HIDDEN_WEAPON_STATS" }, true)
         self._wg_convert_sizes_to_meters = WolfgangHUD:getSetting({ "MENU", "CONVERT_SIZES_TO_METERS" }, true)
+        self._wg_show_diff = WolfgangHUD:getSetting({ "MENU", "SHOW_WEAPON_STAT_DIFF" }, true)
 
         if self._wg_show_hidden_stats and (self._wg_flag == RaidGUIControlWeaponStats.WGFLAG_WEAPONS) then
             params.tab_width = 120
@@ -109,6 +119,23 @@ if string.lower(RequiredScript) == "lib/managers/menu/raid_menu/controls/raidgui
 
     function RaidGUIControlWeaponStats:_create_items(...)
         local result = _create_items_original(self, ...)
+
+        -- the delta sits right of the centered value and gets clipped by the tab panel, so make the panels wider but keep the content where it was
+        for _, item in ipairs(self._wg_show_diff and self._items or {}) do
+            local label = item._label
+            if label and label._label_value and label._label_text then
+                local w = item._object:w()
+                label._label_text:set_w(w)
+                item._object:set_w(w * 1.5)
+                label._object:set_w(w * 1.5)
+                label.set_value = function(this, text)
+                    this._label_value:set_text(text)
+                    local _, _, text_w = this._label_value:text_rect()
+                    this._label_value:set_w(text_w)
+                    this._label_value:set_center_x(w / 2)
+                end
+            end
+        end
 
         if self._params.tabs_params and (self._wg_flag == RaidGUIControlWeaponStats.WGFLAG_WEAPONS) and self._items and #self._items > 0 then
             for _, item in ipairs(self._items) do
@@ -157,12 +184,30 @@ if string.lower(RequiredScript) == "lib/managers/menu/raid_menu/controls/raidgui
             end
         end
 
-        return set_modified_stats_original(self, params, ...)
+        local result = set_modified_stats_original(self, params, ...)
+
+        if not self._wg_diff_mode then
+            return result -- vanilla display (e.g. weapon skill preview)
+        end
+
+        -- big number = new value, only the delta is colored
+        for _, item in ipairs(self._items) do
+            local item_data = self._values[item:name()]
+            if item_data then
+                local modified = tonumber(item_data.modified_value) or 0
+                local delta = math.round_with_precision(modified - (tonumber(item_data.applied_value) or 0), 1)
+                item:set_value(tostring(modified))
+                item:set_value_delta(delta) -- reposition after the value changed
+                RaidGUIControlWeaponStats.wg_color_delta(item, delta)
+            end
+        end
+
+        return result
     end
 
     function RaidGUIControlWeaponStats:set_applied_stats(params, ...)
         if self._wg_show_hidden_stats then
-            for stat_name, value in pairs(self:wg_get_selected_weapon_hidden_stats()) do
+            for stat_name, value in pairs(self:wg_get_selected_weapon_hidden_stats(self._wg_applied_ref)) do
                 self._values[stat_name].applied_value = value
             end
         end
@@ -197,7 +242,7 @@ if string.lower(RequiredScript) == "lib/managers/menu/raid_menu/controls/raidgui
         return tabs_params
     end
 
-    function RaidGUIControlWeaponStats:wg_get_selected_weapon_hidden_stats()
+    function RaidGUIControlWeaponStats:wg_get_selected_weapon_hidden_stats(ref)
         local result = {}
         local shown_stats = {}
         for _, stat in ipairs(self.WG_HIDDEN_STATS) do
@@ -210,11 +255,11 @@ if string.lower(RequiredScript) == "lib/managers/menu/raid_menu/controls/raidgui
         if managers.menu_component then
             local weapon_select_gui = managers.menu_component._raid_menu_weapon_select_gui
             if weapon_select_gui then
-                local selected_item = weapon_select_gui._weapon_list:selected_item()
+                local selected_item = ref or weapon_select_gui._weapon_list:selected_item()
                 if selected_item then
-                    local selected_weapon_data = selected_item:data().value
+                    local selected_weapon_data = ref or selected_item:data().value
                     local weapon_id = selected_weapon_data.weapon_id
-                    local weapon_category_id = weapon_select_gui._selected_weapon_category_id
+                    local weapon_category_id = ref and ref.category_id or weapon_select_gui._selected_weapon_category_id
                     local weapon_category = managers.weapon_inventory:get_weapon_category_by_weapon_category_id(
                         weapon_category_id)
 
@@ -260,6 +305,11 @@ elseif string.lower(RequiredScript) == "lib/managers/menu/raid_menu/controls/rai
         self._wg_flag = RaidGUIControlWeaponStats.WGFLAG_GRENADES
         self._wg_show_hidden_stats = WolfgangHUD:getSetting({ "MENU", "SHOW_HIDDEN_WEAPON_STATS" }, true)
         self._wg_convert_sizes_to_meters = WolfgangHUD:getSetting({ "MENU", "CONVERT_SIZES_TO_METERS" }, true)
+        self._wg_show_diff = WolfgangHUD:getSetting({ "MENU", "SHOW_WEAPON_STAT_DIFF" }, true)
+        if self._wg_show_diff then
+            params.label_class = RaidGUIControlLabelNamedValueWithDelta -- needed for WeaponStatsDiff
+            params.value_delta_font_size = tweak_data.gui.font_sizes.medium
+        end
         return init_original(self, parent, params, ...)
     end
 
@@ -307,6 +357,11 @@ elseif string.lower(RequiredScript) == "lib/managers/menu/raid_menu/controls/rai
         self._wg_flag = RaidGUIControlWeaponStats.WGFLAG_MELEE
         self._wg_show_hidden_stats = WolfgangHUD:getSetting({ "MENU", "SHOW_HIDDEN_WEAPON_STATS" }, true)
         self._wg_convert_sizes_to_meters = WolfgangHUD:getSetting({ "MENU", "CONVERT_SIZES_TO_METERS" }, true)
+        self._wg_show_diff = WolfgangHUD:getSetting({ "MENU", "SHOW_WEAPON_STAT_DIFF" }, true)
+        if self._wg_show_diff then
+            params.label_class = RaidGUIControlLabelNamedValueWithDelta -- needed for WeaponStatsDiff
+            params.value_delta_font_size = tweak_data.gui.font_sizes.medium
+        end
         return init_original(self, parent, params, ...)
     end
 

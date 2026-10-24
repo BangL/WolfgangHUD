@@ -207,6 +207,8 @@
 
 	"wolfganghud_menu_weapons_name"									:	"Waffen",
 	"wolfganghud_show_hidden_weapon_stats_title"					:		"Versteckte Werte anzeigen",
+	"wolfganghud_show_weapon_stat_diff_title"						:		"Gewählte Waffe mit ausgerüsteter vergleichen",
+	"wolfganghud_fix_skill_preview_title"							:		"Waffen-Upgrade-Vorschau korrigieren",
 	"wolfganghud_convert_sizes_meters_title"						:		"Größen in Meter umrechnen",
 
 	"wolfganghud_gameplay_options_name"								:	"Gameplay",
