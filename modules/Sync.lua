@@ -19,6 +19,8 @@ if string.lower(RequiredScript) == "lib/network/base/basenetworksession" and not
 	WolfgangHUD.Sync = {
 		msg_id = "WolfgangHUD_Sync",
 		protocol_version = 1,
+		retry_max = 5,
+		retry_delay = 5,
 		peers = {false, false, false, false},
 		events = {
 			discover = "discover",
@@ -63,6 +65,29 @@ if string.lower(RequiredScript) == "lib/network/base/basenetworksession" and not
 				self:send_to_peer(peer_id, event, data)
 			end
 		end
+	end
+
+	function Sync:send_to_unknown_peers(event, data)
+		for peer_id, known in ipairs(self.peers) do
+			if not known then
+				self:send_to_peer(peer_id, event, data)
+			end
+		end
+	end
+
+	-- discover goes out once on load, so a lost one would leave us deaf to that peer for the
+	-- whole session: ask the peers that did not answer a few more times
+	function Sync:retry_unknown_peers(attempt)
+		attempt = attempt or 1
+		if attempt > self.retry_max then
+			return
+		end
+		DelayedCalls:Add("WolfgangHUD_Sync_retry", self.retry_delay, function()
+			if LuaNetworking:IsMultiplayer() then
+				self:send_to_unknown_peers(self.events.discover, {version = self.protocol_version})
+				self:retry_unknown_peers(attempt + 1)
+			end
+		end)
 	end
 
 	function Sync:receive_message(peer_id, event, data)
@@ -122,6 +147,7 @@ if string.lower(RequiredScript) == "lib/network/base/basenetworksession" and not
 	Hooks:Add("BaseNetworkSessionOnLoadComplete", "WolfgangHUD_Sync_BaseNetworkSessionOnLoadComplete", function(local_peer, id)
 		if LuaNetworking:IsMultiplayer() then
 			Sync:send_to_all_peers(Sync.events.discover, {version = Sync.protocol_version})
+			Sync:retry_unknown_peers()
 		end
 	end)
 
