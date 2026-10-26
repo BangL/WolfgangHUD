@@ -1,4 +1,4 @@
-if not (WolfgangHUD and WolfgangHUD:getSetting({"HUD", "FHB", "ENABLED"}, true)) then return end
+if not WolfgangHUD then return end
 
 if string.lower(RequiredScript) == "lib/setups/gamesetup" then
 
@@ -64,6 +64,7 @@ if string.lower(RequiredScript) == "lib/setups/gamesetup" then
 	end
 
 	function FloatingHealthBarManager:update(t, dt)
+		if not WolfgangHUD:getSetting({"HUD", "FHB", "ENABLED"}, true) then return end
 		self.cam = managers.viewport:get_current_camera()
 		if not self.cam then return end
 		self.rot = self.cam:rotation()
@@ -78,6 +79,7 @@ if string.lower(RequiredScript) == "lib/setups/gamesetup" then
 	end
 
 	function FloatingHealthBarManager:Float(unit)
+		if not WolfgangHUD:getSetting({"HUD", "FHB", "ENABLED"}, true) then return end
 		local key = unit.key and unit:key()
 		if not key then return end
 		local float = self.floats[key]

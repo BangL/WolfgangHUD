@@ -26,7 +26,7 @@
 		<loc file="spanish.json" language="spanish"/>
 	</localization>
 
-	<assets base_path="assets/" load="startup">
+	<assets base_path="assets/">
 		<group name="guis/textures/">
 			<group :name="pd2/">
 				<file :name="hud_stealth_exclam.texture"/>

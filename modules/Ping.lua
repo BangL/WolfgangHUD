@@ -31,6 +31,9 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudteammatepeer" then
 
     function HUDTeammatePeer:update_ping_info(t, dt)
         local ping_panel = self._right_panel:child("ping_panel")
+        if ping_panel then
+            ping_panel:set_visible(WolfgangHUD:getSetting({ "HUD", "PEER", "PING", "SHOW" }, true))
+        end
         if ping_panel and self:peer_id() and t > self._next_ping_update_t then
             local net_session = managers.network:session()
             local peer = net_session and net_session:peer(self:peer_id())

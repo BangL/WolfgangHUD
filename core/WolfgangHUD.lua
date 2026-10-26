@@ -283,6 +283,15 @@ if not _G.WolfgangHUD then
 		}
 	end
 
+	-- chains a callback to a settings group, so modules can add their own without replacing others
+	function WolfgangHUD:add_apply_clbk(script, clbk)
+		local prev = self.apply_settings_clbk[script]
+		self.apply_settings_clbk[script] = prev and function(...)
+			prev(...)
+			clbk(...)
+		end or clbk
+	end
+
 	WolfgangHUD:Reset()	-- Populate settings table
 	WolfgangHUD:Load()	-- Load user settings
 

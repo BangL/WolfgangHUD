@@ -724,6 +724,19 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 		end
 	end
 
+	function HUDListManager:_set_revive_pickup_color(color)
+		local pickup_list = self:list("right_side_list"):item("pickup_list")
+		if pickup_list then
+			local map = HUDList.PickupItem_MAP
+			for _, item in pairs(pickup_list:items()) do
+				local u_id = item:unit_id()
+				if map[u_id] and map[u_id].color_id == "revive_pickup_color" then
+					item:set_icon_color(color or HUDListManager.ListOptions.revive_pickup_color)
+				end
+			end
+		end
+	end
+
 	function HUDListManager:_set_flare_color(color)
 		local pickup_list = self:list("right_side_list"):item("pickup_list")
 		if pickup_list then

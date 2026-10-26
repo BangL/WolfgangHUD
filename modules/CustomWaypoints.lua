@@ -10,10 +10,6 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 		},
 		NORMAL = {
 			alpha = 0.1,
-			loot_angle = WolfgangHUD:getSetting({ "CustomWaypoints", "LOOT", "ANGLE" }, 20),
-			pickups_angle = WolfgangHUD:getSetting({ "CustomWaypoints", "PICKUPS", "ANGLE" }, 35),
-			loot_distance = WolfgangHUD:getSetting({ "CustomWaypoints", "LOOT", "DISTANCE" }, 2000),
-			pickups_distance = WolfgangHUD:getSetting({ "CustomWaypoints", "PICKUPS", "DISTANCE" }, 3000),
 		},
 		PICKUPS = {
 			ICON_MAP = {
@@ -58,7 +54,7 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 				-- COMBAT PICKUPS
 				--health_bag_small =				{skills = {5, 2}},
 				--health_bag =						{skills = {5, 2}},
-				health_bag_big = { skills = { 2, 9 }, color = WolfgangHUD:getColorSetting({ "CustomWaypoints", "PICKUPS", "REVIVES_COLOR" }, "light_green"), ignore = not WolfgangHUD:getSetting({ "CustomWaypoints", "PICKUPS", "REVIVES" }, true) },
+				health_bag_big = { skills = { 2, 9 } },
 				--ammo_bag_small =					{skills = {4, 2}},
 				--ammo_bag =						{skills = {4, 2}},
 				--ammo_bag_big =					{skills = {4, 2}},
@@ -82,28 +78,55 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 
 	function HUDManager:setup_custom_waypoints()
 		if managers.gameinfo and managers.waypoints then
-			if WolfgangHUD:getSetting({ "CustomWaypoints", "LOOT", "SHOW" }, true) then
-				managers.gameinfo:register_listener("loot_waypoint_listener", "loot", "add",
-					callback(self, self, "custom_waypoint_loot_clbk"))
-				managers.gameinfo:register_listener("loot_waypoint_listener", "loot", "remove",
-					callback(self, self, "custom_waypoint_loot_clbk"))
-				managers.gameinfo:register_listener("loot_waypoint_listener", "loot", "interact",
-					callback(self, self, "custom_waypoint_loot_clbk"))
-			end
+			-- always listening, the SHOW settings are checked when a waypoint is added
+			managers.gameinfo:register_listener("loot_waypoint_listener", "loot", "add",
+				callback(self, self, "custom_waypoint_loot_clbk"))
+			managers.gameinfo:register_listener("loot_waypoint_listener", "loot", "remove",
+				callback(self, self, "custom_waypoint_loot_clbk"))
+			managers.gameinfo:register_listener("loot_waypoint_listener", "loot", "interact",
+				callback(self, self, "custom_waypoint_loot_clbk"))
 
-			if WolfgangHUD:getSetting({ "CustomWaypoints", "PICKUPS", "SHOW" }, true) then
-				managers.gameinfo:register_listener("equipment_waypoint_listener", "pickup", "add",
-					callback(self, self, "custom_waypoint_pickup_clbk"))
-				managers.gameinfo:register_listener("equipment_waypoint_listener", "pickup", "remove",
-					callback(self, self, "custom_waypoint_pickup_clbk"))
-			end
+			managers.gameinfo:register_listener("equipment_waypoint_listener", "pickup", "add",
+				callback(self, self, "custom_waypoint_pickup_clbk"))
+			managers.gameinfo:register_listener("equipment_waypoint_listener", "pickup", "remove",
+				callback(self, self, "custom_waypoint_pickup_clbk"))
 		end
 	end
+
+	-- rebuilds all custom waypoints from the current game info, applies changed settings
+	function HUDManager:refresh_custom_waypoints()
+		if not (managers.gameinfo and managers.waypoints) then
+			return
+		end
+		for id in pairs(self._custom_waypoints_loot) do
+			managers.waypoints:remove_waypoint(id)
+		end
+		for id in pairs(self._custom_waypoints_pickups) do
+			managers.waypoints:remove_waypoint(id)
+		end
+		self._custom_waypoints_loot = {}
+		self._custom_waypoints_pickups = {}
+		for key, data in pairs(managers.gameinfo:get_loot()) do
+			self:custom_waypoint_loot_clbk("add", key, data)
+		end
+		for key, data in pairs(managers.gameinfo:get_pickups()) do
+			self:custom_waypoint_pickup_clbk("add", key, data)
+		end
+	end
+
+	WolfgangHUD:add_apply_clbk("CustomWaypoints", function()
+		if managers.hud and managers.hud.refresh_custom_waypoints then
+			managers.hud:refresh_custom_waypoints()
+		end
+	end)
 
 	function HUDManager:custom_waypoint_loot_clbk(event, key, data)
 		local id = "loot_wp_" .. key
 
 		if event == "add" then
+			if not WolfgangHUD:getSetting({ "CustomWaypoints", "LOOT", "SHOW" }, true) then
+				return
+			end
 			local tweak_entry = data.carry_id and tweak_data.carry[data.carry_id]
 			if tweak_entry and not tweak_entry.is_corpse then
 				local debug = HUDManager.CUSTOM_WAYPOINTS.DEBUGGING
@@ -167,11 +190,11 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 	function HUDManager:make_loot_waypoint_settings(debug)
 		return {
 			angle = debug and HUDManager.CUSTOM_WAYPOINTS.DEBUG.angle or
-				HUDManager.CUSTOM_WAYPOINTS.NORMAL.loot_angle,
+				WolfgangHUD:getSetting({ "CustomWaypoints", "LOOT", "ANGLE" }, 20),
 			alpha = debug and HUDManager.CUSTOM_WAYPOINTS.DEBUG.alpha or
 				HUDManager.CUSTOM_WAYPOINTS.NORMAL.alpha,
 			distance = debug and HUDManager.CUSTOM_WAYPOINTS.DEBUG.distance or
-				HUDManager.CUSTOM_WAYPOINTS.NORMAL.loot_distance
+				WolfgangHUD:getSetting({ "CustomWaypoints", "LOOT", "DISTANCE" }, 2000)
 		}
 	end
 
@@ -179,9 +202,13 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 		local id = "equipment_wp_" .. key
 
 		if event == "add" then
+			if not WolfgangHUD:getSetting({ "CustomWaypoints", "PICKUPS", "SHOW" }, true) then
+				return
+			end
 			local icon_table = HUDManager.CUSTOM_WAYPOINTS.PICKUPS.ICON_MAP
 			local icon_data = icon_table[data.interact_id]
-			if icon_data and not icon_data.ignore then
+			local is_revive = data.interact_id == "health_bag_big"
+			if icon_data and not icon_data.ignore and not (is_revive and not WolfgangHUD:getSetting({ "CustomWaypoints", "PICKUPS", "REVIVES" }, true)) then
 				if icon_data.skills then
 					icon_data.texture = "ui/atlas/skilltree/raid_atlas_skills"
 					local x, y = unpack(icon_data.skills)
@@ -203,7 +230,8 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 					fade_angle = { start_angle = settings.angle, end_angle = settings.angle - 5, final_scale = 8 },
 					visible_angle = { max = settings.angle },
 					visible_distance = { max = settings.distance },
-					color = icon_data.color or
+					color = icon_data.color or (is_revive and
+						WolfgangHUD:getColorSetting({ "CustomWaypoints", "PICKUPS", "REVIVES_COLOR" }, "light_green")) or
 						WolfgangHUD:getColorSetting({ "CustomWaypoints", "PICKUPS", "COLOR" }, "white"),
 					icon = {
 						type = "icon",
@@ -223,7 +251,7 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 				managers.waypoints:add_waypoint(id, "CustomWaypoint", params, true)
 				self._custom_waypoints_pickups[id] = true
 			end
-		elseif event == "remove" then
+		elseif event == "remove" and managers.waypoints:get_waypoint(id) then
 			managers.waypoints:remove_waypoint(id)
 			self._custom_waypoints_pickups[id] = nil
 		end
@@ -232,11 +260,11 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 	function HUDManager:make_pickups_waypoint_settings(debug)
 		return {
 			angle = debug and HUDManager.CUSTOM_WAYPOINTS.DEBUG.angle or
-				HUDManager.CUSTOM_WAYPOINTS.NORMAL.pickups_angle,
+				WolfgangHUD:getSetting({ "CustomWaypoints", "PICKUPS", "ANGLE" }, 35),
 			alpha = debug and HUDManager.CUSTOM_WAYPOINTS.DEBUG.alpha or
 				HUDManager.CUSTOM_WAYPOINTS.NORMAL.alpha,
 			distance = debug and HUDManager.CUSTOM_WAYPOINTS.DEBUG.distance or
-				HUDManager.CUSTOM_WAYPOINTS.NORMAL.pickups_distance
+				WolfgangHUD:getSetting({ "CustomWaypoints", "PICKUPS", "DISTANCE" }, 3000)
 		}
 	end
 
