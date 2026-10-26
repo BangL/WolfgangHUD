@@ -8,185 +8,27 @@ if WolfgangHUD then
 			{	-- HUD Options
 				type = "menu",
 				menu_id = "wolfganghud_hud_options_menu",
+				icon = "menu_item_interface",
 				name_id = "wolfganghud_hud_options_name",
 				visible_reqs = {},
 				enabled_reqs = {},
 				options = {
-					{ -- General
-						y_offset = 320,
-						type = "header",
-						text_id = "wolfganghud_hud_general_name",
-					},
-					{
-						type = "multi_choice",
-						name_id = "wolfganghud_hud_layout_title",
-						value = {"HUD", "LAYOUT"},
-						visible_reqs = {},
-						enabled_reqs = {},
-						options = {
-							"wolfganghud_hudlayouts_vanilla",
-							"wolfganghud_hudlayouts_pd2style"
-						},
-					},
-					{
-						type = "toggle",
-						name_id = "wolfganghud_colorize_names_title",
-						value = {"HUD", "COLORIZE_NAMES"},
-						visible_reqs = {},
-						enabled_reqs = {},
-					},
-					{
-						type = "multi_choice",
-						name_id = "wolfganghud_hud_colorize_mode_title",
-						value = {"HUD", "COLORIZE_MODE"},
-						visible_reqs = {},
-						enabled_reqs = {},
-						options = {
-							"wolfganghud_colorize_modes_by_net_synced_outlines",
-							"wolfganghud_colorize_modes_by_local_ui_panels"
-						},
-					},
-					{
-						type = "toggle",
-						name_id = "wolfganghud_levels_before_name_title",
-						value = {"HUD", "LEVELS_BEFORE_NAME"},
-						visible_reqs = {},
-						enabled_reqs = {},
-					},
-					{
-						type = "toggle",
-						name_id = "wolfganghud_hide_in_camp_title",
-						value = {"HUD", "SHOW_IN_CAMP"},
-						visible_reqs = {},
-						enabled_reqs = {},
-						invert_value = true,
-					},
-					{
-						type = "divider",
-						y_offset = 100, -- shift for next header
-					},
-					{ -- Chat
-						y_offset = 320,
-						type = "header",
-						text_id = "wolfganghud_menu_chat_name",
-					},
-					{
-						type = "toggle",
-						name_id = "wolfganghud_chat_typing_info_title",
-						value = {"CHAT", "TYPING_INFO"},
-						visible_reqs = {},
-						enabled_reqs = {},
-					},
-					{
-						type = "toggle",
-						name_id = "wolfganghud_chat_own_left_title",
-						value = {"CHAT", "OWN_LEFT"},
-						visible_reqs = {},
-						enabled_reqs = {},
-					},
-					{
-						type = "toggle",
-						name_id = "wolfganghud_chat_colorize_title",
-						value = {"CHAT", "COLORIZE"},
-						visible_reqs = {},
-						enabled_reqs = {
-							{setting = {"HUD", "COLORIZE_NAMES"}, invert = false},
-						},
-					},
-					{
-						type = "toggle",
-						name_id = "wolfganghud_chat_colored_bg_title",
-						value = {"CHAT", "COLORED_BG"},
-						visible_reqs = {},
-						enabled_reqs = {},
-					},
-					{
-						type = "multi_choice",
-						name_id = "wolfganghud_chat_scrollbar_title",
-						value = {"CHAT", "SCROLLBAR"},
-						visible_reqs = {},
-						enabled_reqs = {},
-						options = {
-							"wolfganghud_chat_scrollbar_off",
-							"wolfganghud_chat_scrollbar_left",
-							"wolfganghud_chat_scrollbar_right",
-						},
-					},
-					{
-						type = "slider",
-						name_id = "wolfganghud_chat_height_title",
-						value = {"CHAT", "HEIGHT"},
-						visible_reqs = {},
-						enabled_reqs = {},
-						min_value = 240,
-						max_value = 800,
-						decimal_places = 0,
-					},
-					{
-						type = "slider",
-						name_id = "wolfganghud_chat_width_title",
-						value = {"CHAT", "WIDTH"},
-						visible_reqs = {},
-						enabled_reqs = {},
-						min_value = 384,
-						max_value = 900,
-						decimal_places = 0,
-					},
-					{
-						type = "slider",
-						name_id = "wolfganghud_chat_name_spacing_title",
-						value = {"CHAT", "NAME_SPACING"},
-						visible_reqs = {},
-						enabled_reqs = {},
-						min_value = 0,
-						max_value = 10,
-						decimal_places = 0,
-					},
-					{
-						type = "slider",
-						name_id = "wolfganghud_chat_line_gap_title",
-						value = {"CHAT", "MESSAGE_SPACING"},
-						visible_reqs = {},
-						enabled_reqs = {},
-						min_value = 0,
-						max_value = 30,
-						decimal_places = 0,
-					},
-					{
-						type = "slider",
-						name_id = "wolfganghud_chat_hide_delay_title",
-						value = {"CHAT", "HIDE_DELAY"},
-						visible_reqs = {},
-						enabled_reqs = {},
-						min_value = 0,
-						max_value = 60,
-						decimal_places = 0,
-					},
-					{
-						type = "slider",
-						name_id = "wolfganghud_chat_messages_kept_title",
-						value = {"CHAT", "MESSAGES_KEPT"},
-						visible_reqs = {},
-						enabled_reqs = {},
-						min_value = 10,
-						max_value = 200,
-						decimal_places = 0,
-					},
 					{	-- Player Panel
 						type = "menu",
 						menu_id = "wolfganghud_player_panel_options_menu",
+						icon = "menu_item_characters",
 						name_id = "wolfganghud_player_panel_options_name",
 						visible_reqs = {},
 						enabled_reqs = {},
 						options = {
 							{ -- KillCount
-								y_offset = 320,
 								type = "header",
 								text_id = "wolfganghud_killcount_name",
 							},
 							{
 								type = "toggle",
 								name_id = "wolfganghud_show_killcount_title",
+								desc_id = "wolfganghud_show_killcount_desc",
 								visible_reqs = {},
 								enabled_reqs = {},
 								value = {"HUD", "PLAYER", "KILLCOUNTER", "HIDE"},
@@ -195,6 +37,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_killcount_color_title",
+								desc_id = "wolfganghud_killcount_color_desc",
 								value = {"HUD", "PLAYER", "KILLCOUNTER", "COLOR"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -207,6 +50,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_show_special_title",
+								desc_id = "wolfganghud_show_special_desc",
 								visible_reqs = {},
 								enabled_reqs = {
 									{setting = {"HUD", "PLAYER", "KILLCOUNTER", "HIDE"}, invert = true}
@@ -216,6 +60,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_show_head_title",
+								desc_id = "wolfganghud_show_head_desc",
 								visible_reqs = {},
 								enabled_reqs = {
 									{setting = {"HUD", "PLAYER", "KILLCOUNTER", "HIDE"}, invert = true}
@@ -229,6 +74,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_player_show_accuracy_title",
+								desc_id = "wolfganghud_player_show_accuracy_desc",
 								visible_reqs = {},
 								enabled_reqs = {},
 								value = {"HUD", "PLAYER", "SHOW_ACCURACY"},
@@ -238,18 +84,19 @@ if WolfgangHUD then
 					{	-- Teammate Panels
 						type = "menu",
 						menu_id = "wolfganghud_peer_panels_options_menu",
+						icon = "menu_item_online",
 						name_id = "wolfganghud_peer_panels_options_name",
 						visible_reqs = {},
 						enabled_reqs = {},
 						options = {
 							{ -- KillCount
-								y_offset = 320,
 								type = "header",
 								text_id = "wolfganghud_killcount_name",
 							},
 							{
 								type = "toggle",
 								name_id = "wolfganghud_show_killcount_title",
+								desc_id = "wolfganghud_show_killcount_desc",
 								visible_reqs = {},
 								enabled_reqs = {},
 								value = {"HUD", "PEER", "KILLCOUNTER", "HIDE"},
@@ -258,6 +105,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_killcount_color_title",
+								desc_id = "wolfganghud_killcount_color_desc",
 								value = {"HUD", "PEER", "KILLCOUNTER", "COLOR"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -270,6 +118,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_show_special_title",
+								desc_id = "wolfganghud_show_special_desc",
 								visible_reqs = {},
 								enabled_reqs = {
 									{setting = {"HUD", "PEER", "KILLCOUNTER", "HIDE"}, invert = true}
@@ -279,6 +128,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_show_head_title",
+								desc_id = "wolfganghud_show_head_desc",
 								visible_reqs = {},
 								enabled_reqs = {
 									{setting = {"HUD", "PEER", "KILLCOUNTER", "HIDE"}, invert = true}
@@ -292,6 +142,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_show_client_ping_title",
+								desc_id = "wolfganghud_show_client_ping_desc",
 								visible_reqs = {},
 								enabled_reqs = {},
 								value = {"HUD", "PEER", "PING", "SHOW"},
@@ -301,18 +152,19 @@ if WolfgangHUD then
 					{	-- Bot Panels
 						type = "menu",
 						menu_id = "wolfganghud_ai_panels_options_menu",
+						icon = "menu_item_offline",
 						name_id = "wolfganghud_ai_panels_options_name",
 						visible_reqs = {},
 						enabled_reqs = {},
 						options = {
 							{ -- KillCount
-								y_offset = 320,
 								type = "header",
 								text_id = "wolfganghud_killcount_name",
 							},
 							{
 								type = "toggle",
 								name_id = "wolfganghud_show_killcount_title",
+								desc_id = "wolfganghud_show_killcount_desc",
 								visible_reqs = {},
 								enabled_reqs = {},
 								value = {"HUD", "AI", "KILLCOUNTER", "HIDE"},
@@ -321,6 +173,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_killcount_color_title",
+								desc_id = "wolfganghud_killcount_color_desc",
 								value = {"HUD", "AI", "KILLCOUNTER", "COLOR"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -333,6 +186,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_show_special_title",
+								desc_id = "wolfganghud_show_special_desc",
 								visible_reqs = {},
 								enabled_reqs = {
 									{setting = {"HUD", "AI", "KILLCOUNTER", "HIDE"}, invert = true}
@@ -342,6 +196,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_show_head_title",
+								desc_id = "wolfganghud_show_head_desc",
 								visible_reqs = {},
 								enabled_reqs = {
 									{setting = {"HUD", "AI", "KILLCOUNTER", "HIDE"}, invert = true}
@@ -353,16 +208,17 @@ if WolfgangHUD then
 					{	-- Interaction indicator
 						type = "menu",
 						menu_id = "wolfganghud_interaction_indicator_options_menu",
+						icon = "menu_item_controls",
 						name_id = "wolfganghud_interaction_indicator_options_name",
 						options = {
 							{ -- General
-								y_offset = 320,
 								type = "header",
 								text_id = "wolfganghud_interaction_general_name",
 							},
 							{
 								type = "slider",
 								name_id = "wolfganghud_interaction_text_scale_title",
+								desc_id = "wolfganghud_interaction_text_scale_desc",
 								value = {"INTERACTION", "TEXT_SCALE"},
 								visible_reqs = {},
 								enabled_reqs = {},
@@ -373,6 +229,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_interaction_show_reload_timer_title",
+								desc_id = "wolfganghud_interaction_show_reload_timer_desc",
 								value = {"INTERACTION", "SHOW_RELOAD"},
 								visible_reqs = {},
 								enabled_reqs = {},
@@ -380,22 +237,19 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_interaction_show_melee_charge_title",
+								desc_id = "wolfganghud_interaction_show_melee_charge_desc",
 								value = {"INTERACTION", "SHOW_MELEE"},
 								visible_reqs = {},
 								enabled_reqs = {},
 							},
-							{
-								type = "divider",
-								y_offset = 100, -- shift for next header
-							},
 							{ -- Interaction Bar
-								y_offset = 320,
 								type = "header",
 								text_id = "wolfganghud_interaction_bar_name",
 							},
 							{
 								type = "toggle",
 								name_id = "wolfganghud_interaction_show_bar_title",
+								desc_id = "wolfganghud_interaction_show_bar_desc",
 								value = {"INTERACTION", "SHOW_BAR"},
 								visible_reqs = {},
 								enabled_reqs = {},
@@ -403,6 +257,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_interaction_bar_scale_title",
+								desc_id = "wolfganghud_interaction_bar_scale_desc",
 								value = {"INTERACTION", "BAR_SCALE"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -419,6 +274,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_interaction_show_timer_title",
+								desc_id = "wolfganghud_interaction_show_timer_desc",
 								value = {"INTERACTION", "SHOW_TIME_REMAINING"},
 								visible_reqs = {},
 								enabled_reqs = {},
@@ -426,6 +282,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_interaction_timer_hide_motion_dot_title",
+								desc_id = "wolfganghud_interaction_timer_hide_motion_dot_desc",
 								value = {"INTERACTION", "HIDE_MOTION_DOT"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -435,6 +292,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_interaction_timer_scale_title",
+								desc_id = "wolfganghud_interaction_timer_scale_desc",
 								value = {"INTERACTION", "TIMER_SCALE"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -447,6 +305,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_interaction_timer_offset_x_title",
+								desc_id = "wolfganghud_interaction_timer_offset_x_desc",
 								value = {"INTERACTION", "TIMER_OFFSET_X"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -459,6 +318,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_interaction_timer_offset_y_title",
+								desc_id = "wolfganghud_interaction_timer_offset_y_desc",
 								value = {"INTERACTION", "TIMER_OFFSET_Y"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -471,6 +331,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_interaction_timer_color_start_title",
+								desc_id = "wolfganghud_interaction_timer_color_start_desc",
 								value = {"INTERACTION", "GRADIENT_COLOR_START"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -483,6 +344,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_interaction_timer_color_title",
+								desc_id = "wolfganghud_interaction_timer_color_desc",
 								value = {"INTERACTION", "GRADIENT_COLOR"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -497,18 +359,20 @@ if WolfgangHUD then
 					{	-- List panels
 						type = "menu",
 						menu_id = "wolfganghud_hudlist_options_menu",
+						icon = "menu_item_missions",
 						name_id = "wolfganghud_hudlist_options_name",
 						visible_reqs = {},
 						enabled_reqs = {},
 						options = {
 							{ -- General
-								y_offset = 320,
 								type = "header",
 								text_id = "wolfganghud_hudlist_general_name",
 							},
 							{
 								type = "toggle",
 								name_id = "wolfganghud_hudlist_show_title",
+								desc_id = "wolfganghud_hudlist_show_desc",
+								restart = true,
 								value = {"HUDList", "ENABLED"},
 								visible_reqs = {},
 								enabled_reqs = {},
@@ -516,6 +380,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_hudlist_box_color_title",
+								desc_id = "wolfganghud_hudlist_box_color_desc",
 								value = {"HUDList", "list_color"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -528,6 +393,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_hudlist_box_bg_color_title",
+								desc_id = "wolfganghud_hudlist_box_bg_color_desc",
 								value = {"HUDList", "list_color_bg"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -540,6 +406,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_hudlist_scale_right_title",
+								desc_id = "wolfganghud_hudlist_scale_right_desc",
 								value = {"HUDList", "right_list_scale"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -552,6 +419,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_hudlist_progress_alpha_right_title",
+								desc_id = "wolfganghud_hudlist_progress_alpha_right_desc",
 								value = {"HUDList", "right_list_progress_alpha"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -561,18 +429,14 @@ if WolfgangHUD then
 								max_value = 1.0,
 								decimal_places = 2,
 							},
-							{
-								type = "divider",
-								y_offset = 100, -- shift for next header
-							},
 							{ -- Unit Counters
-								y_offset = 320,
 								type = "header",
 								text_id = "wolfganghud_hudlist_unit_counters_name",
 							},
 							{
 								type = "toggle",
 								name_id = "wolfganghud_hudlist_show_enemies_title",
+								desc_id = "wolfganghud_hudlist_show_enemies_desc",
 								value = {"HUDList", "RIGHT_LIST", "show_enemies"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -582,6 +446,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_hudlist_enemycolor_title",
+								desc_id = "wolfganghud_hudlist_enemycolor_desc",
 								value = {"HUDList", "enemy_color"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -595,6 +460,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_hudlist_seperate_specials_title",
+								desc_id = "wolfganghud_hudlist_seperate_specials_desc",
 								value = {"HUDList", "RIGHT_LIST", "aggregate_enemies"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -606,6 +472,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_hudlist_specialcolor_title",
+								desc_id = "wolfganghud_hudlist_specialcolor_desc",
 								value = {"HUDList", "special_color"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -620,6 +487,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_hudlist_show_objectives_title",
+								desc_id = "wolfganghud_hudlist_show_objectives_desc",
 								value = {"HUDList", "RIGHT_LIST", "show_objectives"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -629,6 +497,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_hudlist_objectivecolor_title",
+								desc_id = "wolfganghud_hudlist_objectivecolor_desc",
 								value = {"HUDList", "objective_color"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -640,13 +509,13 @@ if WolfgangHUD then
 								add_rainbow = false,
 							},
 							{ -- Loot Counters
-								y_offset = 320,
 								type = "header",
 								text_id = "wolfganghud_hudlist_loot_counters_name",
 							},
 							{
 								type = "toggle",
 								name_id = "wolfganghud_hudlist_show_loot_title",
+								desc_id = "wolfganghud_hudlist_show_loot_desc",
 								value = {"HUDList", "RIGHT_LIST", "show_loot"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -660,6 +529,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_hudlist_show_valuables_title",
+								desc_id = "wolfganghud_hudlist_show_valuables_desc",
 								value = {"HUDList", "RIGHT_LIST", "SHOW_PICKUP_CATEGORIES", "valuables"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -669,6 +539,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_hudlist_use_dogtag_values_title",
+								desc_id = "wolfganghud_hudlist_use_dogtag_values_desc",
 								value = {"HUDList", "use_dogtag_values"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -679,6 +550,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_hudlist_valuablecolor_title",
+								desc_id = "wolfganghud_hudlist_valuablecolor_desc",
 								value = {"HUDList", "valuable_color"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -692,6 +564,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_hudlist_show_equipment_title",
+								desc_id = "wolfganghud_hudlist_show_equipment_desc",
 								value = {"HUDList", "RIGHT_LIST", "SHOW_PICKUP_CATEGORIES", "mission_pickups"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -701,6 +574,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_hudlist_equipmentcolor_title",
+								desc_id = "wolfganghud_hudlist_equipmentcolor_desc",
 								value = {"HUDList", "mission_pickup_color"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -714,6 +588,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_hudlist_show_pickups_mode_title",
+								desc_id = "wolfganghud_hudlist_show_pickups_mode_desc",
 								value = {"HUDList", "RIGHT_LIST", "SHOW_PICKUP_CATEGORIES", "combat_pickups_mode"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -728,6 +603,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_hudlist_pickupcolor_revives_title",
+								desc_id = "wolfganghud_hudlist_pickupcolor_revives_desc",
 								value = {"HUDList", "revive_pickup_color"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -741,6 +617,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_hudlist_pickupcolor_title",
+								desc_id = "wolfganghud_hudlist_pickupcolor_desc",
 								value = {"HUDList", "combat_pickup_color"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -754,6 +631,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_hudlist_show_flares_title",
+								desc_id = "wolfganghud_hudlist_show_flares_desc",
 								value = {"HUDList", "RIGHT_LIST", "SHOW_PICKUP_CATEGORIES", "flares"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -763,6 +641,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_hudlist_flarecolor_title",
+								desc_id = "wolfganghud_hudlist_flarecolor_desc",
 								value = {"HUDList", "flare_color"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -778,18 +657,19 @@ if WolfgangHUD then
 					{	-- Floating Health Bars
 						type = "menu",
 						menu_id = "wolfganghud_fhb_options_menu",
+						icon = "menu_item_skills",
 						name_id = "wolfganghud_fhb_options_name",
 						visible_reqs = {},
 						enabled_reqs = {},
 						options = {
 							{ -- General
-								y_offset = 320,
 								type = "header",
 								text_id = "wolfganghud_fhb_general_name",
 							},
 							{
 								type = "toggle",
 								name_id = "wolfganghud_use_fhb_title",
+								desc_id = "wolfganghud_use_fhb_desc",
 								value = {"HUD", "FHB", "ENABLED"},
 								visible_reqs = {},
 								enabled_reqs = {},
@@ -797,6 +677,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_fhb_size_title",
+								desc_id = "wolfganghud_fhb_size_desc",
 								value = {"HUD", "FHB", "SIZE"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -809,6 +690,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_fhb_margin_title",
+								desc_id = "wolfganghud_fhb_margin_desc",
 								value = {"HUD", "FHB", "MARGIN"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -821,6 +703,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_fhb_alpha_title",
+								desc_id = "wolfganghud_fhb_alpha_desc",
 								value = {"HUD", "FHB", "ALPHA"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -837,6 +720,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_fhb_custom_pie_color_title",
+								desc_id = "wolfganghud_fhb_custom_pie_color_desc",
 								value = {"HUD", "FHB", "PIE_COLOR_CUSTOM"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -846,6 +730,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_fhb_pie_color_start_title",
+								desc_id = "wolfganghud_fhb_pie_color_start_desc",
 								value = {"HUD", "FHB", "PIE_COLOR_START"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -859,6 +744,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_fhb_pie_color_end_title",
+								desc_id = "wolfganghud_fhb_pie_color_end_desc",
 								value = {"HUD", "FHB", "PIE_COLOR_END"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -870,13 +756,13 @@ if WolfgangHUD then
 								add_rainbow = false,
 							},
 							{ -- Enemies
-								y_offset = 320,
 								type = "header",
 								text_id = "wolfganghud_fhb_enemy_name",
 							},
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_fhb_color_start_title",
+								desc_id = "wolfganghud_fhb_color_start_desc",
 								value = {"HUD", "FHB", "COLOR_START"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -889,6 +775,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_fhb_color_end_title",
+								desc_id = "wolfganghud_fhb_color_end_desc",
 								value = {"HUD", "FHB", "COLOR_END"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -905,6 +792,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_fhb_show_friendly_title",
+								desc_id = "wolfganghud_fhb_show_friendly_desc",
 								value = {"HUD", "FHB", "SHOW_FRIENDLY"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -914,6 +802,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_fhb_color_friendly_title",
+								desc_id = "wolfganghud_fhb_color_friendly_desc",
 								value = {"HUD", "FHB", "COLOR_FRIENDLY"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -929,18 +818,19 @@ if WolfgangHUD then
 					{	-- Damage Popups
 						type = "menu",
 						menu_id = "wolfganghud_dmgpopups_options_menu",
+						icon = "menu_item_weapons",
 						name_id = "wolfganghud_dmgpopups_options_name",
 						visible_reqs = {},
 						enabled_reqs = {},
 						options = {
 							{ -- General
-								y_offset = 320,
 								type = "header",
 								text_id = "wolfganghud_dmgpopups_general_name",
 							},
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_dmgpopups_display_mode_title",
+								desc_id = "wolfganghud_dmgpopups_display_mode_desc",
 								value = {"HUD", "DamagePopup", "DISPLAY_MODE"},
 								visible_reqs = {},
 								enabled_reqs = {},
@@ -953,6 +843,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_dmgpopups_scale_title",
+								desc_id = "wolfganghud_dmgpopups_scale_desc",
 								visible_reqs = {},
 								enabled_reqs = {
 									{setting = {"HUD", "DamagePopup", "DISPLAY_MODE"}, min = 2},
@@ -965,6 +856,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_dmgpopups_skull_scale_title",
+								desc_id = "wolfganghud_dmgpopups_skull_scale_desc",
 								visible_reqs = {},
 								enabled_reqs = {
 									{setting = {"HUD", "DamagePopup", "DISPLAY_MODE"}, min = 2},
@@ -977,6 +869,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_dmgpopups_skull_align_title",
+								desc_id = "wolfganghud_dmgpopups_skull_align_desc",
 								value = {"HUD", "DamagePopup", "SKULL_ALIGN"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -990,6 +883,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_dmgpopups_time_title",
+								desc_id = "wolfganghud_dmgpopups_time_desc",
 								visible_reqs = {},
 								enabled_reqs = {
 									{setting = {"HUD", "DamagePopup", "DISPLAY_MODE"}, min = 2},
@@ -1002,6 +896,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_dmgpopups_height_title",
+								desc_id = "wolfganghud_dmgpopups_height_desc",
 								visible_reqs = {},
 								enabled_reqs = {
 									{setting = {"HUD", "DamagePopup", "DISPLAY_MODE"}, min = 2},
@@ -1014,6 +909,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_dmgpopups_alpha_title",
+								desc_id = "wolfganghud_dmgpopups_alpha_desc",
 								visible_reqs = {},
 								enabled_reqs = {
 									{setting = {"HUD", "DamagePopup", "DISPLAY_MODE"}, min = 2},
@@ -1026,6 +922,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_dmgpopups_color_title",
+								desc_id = "wolfganghud_dmgpopups_color_desc",
 								value = {"HUD", "DamagePopup", "COLOR"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -1038,6 +935,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_dmgpopups_critical_color_title",
+								desc_id = "wolfganghud_dmgpopups_critical_color_desc",
 								value = {"HUD", "DamagePopup", "CRITICAL_COLOR"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -1050,6 +948,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_dmgpopups_headshot_color_title",
+								desc_id = "wolfganghud_dmgpopups_headshot_color_desc",
 								value = {"HUD", "DamagePopup", "HEADSHOT_COLOR"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -1062,6 +961,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_dmgpopups_custom_ai_color_use_title",
+								desc_id = "wolfganghud_dmgpopups_custom_ai_color_use_desc",
 								value = {"HUD", "DamagePopup", "CUSTOM_AI_COLOR_USE"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -1071,6 +971,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_dmgpopups_custom_ai_color_title",
+								desc_id = "wolfganghud_dmgpopups_custom_ai_color_desc",
 								value = {"HUD", "DamagePopup", "CUSTOM_AI_COLOR"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -1086,16 +987,17 @@ if WolfgangHUD then
 					{	-- Suspicion
 						type = "menu",
 						menu_id = "wolfganghud_suspicion_options_menu",
+						icon = "menu_item_tutorial",
 						name_id = "wolfganghud_suspicion_options_name",
 						options = {
 							{ -- General
-								y_offset = 320,
 								type = "header",
 								text_id = "wolfganghud_suspicion_general_name",
 							},
 							{
 								type = "slider",
 								name_id = "wolfganghud_suspicion_scale_title",
+								desc_id = "wolfganghud_suspicion_scale_desc",
 								visible_reqs = {},
 								enabled_reqs = {},
 								value = { "HUD", "Suspicion", "SCALE" },
@@ -1106,6 +1008,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_suspicion_show_pd2hud_title",
+								desc_id = "wolfganghud_suspicion_show_pd2hud_desc",
 								visible_reqs = {},
 								enabled_reqs = {},
 								value = { "HUD", "Suspicion", "SHOW_PD2HUD" },
@@ -1113,6 +1016,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_suspicion_show_detected_text_title",
+								desc_id = "wolfganghud_suspicion_show_detected_text_desc",
 								visible_reqs = {},
 								enabled_reqs = {
 									{setting = {"HUD", "Suspicion", "SHOW_PD2HUD"}, invert = false},
@@ -1122,6 +1026,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_suspicion_show_ring_bg_title",
+								desc_id = "wolfganghud_suspicion_show_ring_bg_desc",
 								visible_reqs = {},
 								enabled_reqs = {},
 								value = { "HUD", "Suspicion", "SHOW_RING_BG" },
@@ -1129,6 +1034,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_suspicion_show_percentage_numeric_title",
+								desc_id = "wolfganghud_suspicion_show_percentage_numeric_desc",
 								visible_reqs = {},
 								enabled_reqs = {},
 								value = { "HUD", "Suspicion", "SHOW_PERCENTAGE_NUMERIC" },
@@ -1136,6 +1042,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_suspicion_percentage_color_start_title",
+								desc_id = "wolfganghud_suspicion_percentage_color_start_desc",
 								value = {"HUD", "Suspicion", "COLOR_START"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -1148,6 +1055,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_suspicion_percentage_color_end_title",
+								desc_id = "wolfganghud_suspicion_percentage_color_end_desc",
 								value = {"HUD", "Suspicion", "COLOR_END"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -1162,16 +1070,17 @@ if WolfgangHUD then
 					{	-- Custom Waypoints
 						type = "menu",
 						menu_id = "wolfganghud_waypoints_options_menu",
+						icon = "menu_item_camp",
 						name_id = "wolfganghud_waypoints_options_name",
 						options = {
 							{ -- Pickups
-								y_offset = 320,
 								type = "header",
 								text_id = "wolfganghud_waypoints_pickups_name",
 							},
 							{
 								type = "toggle",
 								name_id = "wolfganghud_waypoints_show_pickups_title",
+								desc_id = "wolfganghud_waypoints_show_pickups_desc",
 								value = {"CustomWaypoints", "PICKUPS", "SHOW"},
 								visible_reqs = {},
 								enabled_reqs = {},
@@ -1179,6 +1088,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_waypoints_pickups_offset_title",
+								desc_id = "wolfganghud_waypoints_pickups_offset_desc",
 								value = {"CustomWaypoints", "PICKUPS", "OFFSET"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -1191,6 +1101,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_waypoints_pickups_angle_title",
+								desc_id = "wolfganghud_waypoints_pickups_angle_desc",
 								value = {"CustomWaypoints", "PICKUPS", "ANGLE"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -1203,6 +1114,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_waypoints_pickups_distance_title",
+								desc_id = "wolfganghud_waypoints_pickups_distance_desc",
 								value = {"CustomWaypoints", "PICKUPS", "DISTANCE"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -1215,6 +1127,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_waypoints_pickups_color_title",
+								desc_id = "wolfganghud_waypoints_pickups_color_desc",
 								value = {"CustomWaypoints", "PICKUPS", "COLOR"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -1227,6 +1140,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_waypoints_pickups_hide_uninteractable_title",
+								desc_id = "wolfganghud_waypoints_pickups_hide_uninteractable_desc",
 								value = {"CustomWaypoints", "PICKUPS", "HIDE_UNINTERACTABLE"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -1236,6 +1150,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_waypoints_show_pickups_revives_title",
+								desc_id = "wolfganghud_waypoints_show_pickups_revives_desc",
 								value = {"CustomWaypoints", "PICKUPS", "REVIVES"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -1245,6 +1160,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_waypoints_revives_color_title",
+								desc_id = "wolfganghud_waypoints_revives_color_desc",
 								value = {"CustomWaypoints", "PICKUPS", "REVIVES_COLOR"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -1256,13 +1172,13 @@ if WolfgangHUD then
 								add_rainbow = false,
 							},
 							{ -- Loot
-								y_offset = 320,
 								type = "header",
 								text_id = "wolfganghud_waypoints_loot_name",
 							},
 							{
 								type = "toggle",
 								name_id = "wolfganghud_waypoints_show_loot_title",
+								desc_id = "wolfganghud_waypoints_show_loot_desc",
 								value = {"CustomWaypoints", "LOOT", "SHOW"},
 								visible_reqs = {},
 								enabled_reqs = {},
@@ -1270,6 +1186,7 @@ if WolfgangHUD then
 							{
 								type = "toggle",
 								name_id = "wolfganghud_waypoints_loot_icon_title",
+								desc_id = "wolfganghud_waypoints_loot_icon_desc",
 								value = {"CustomWaypoints", "LOOT", "ICON"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -1279,6 +1196,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_waypoints_loot_offset_title",
+								desc_id = "wolfganghud_waypoints_loot_offset_desc",
 								value = {"CustomWaypoints", "LOOT", "OFFSET"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -1291,6 +1209,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_waypoints_loot_angle_title",
+								desc_id = "wolfganghud_waypoints_loot_angle_desc",
 								value = {"CustomWaypoints", "LOOT", "ANGLE"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -1303,6 +1222,7 @@ if WolfgangHUD then
 							{
 								type = "slider",
 								name_id = "wolfganghud_waypoints_loot_distance_title",
+								desc_id = "wolfganghud_waypoints_loot_distance_desc",
 								value = {"CustomWaypoints", "LOOT", "DISTANCE"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -1315,6 +1235,7 @@ if WolfgangHUD then
 							{
 								type = "multi_choice",
 								name_id = "wolfganghud_waypoints_loot_color_title",
+								desc_id = "wolfganghud_waypoints_loot_color_desc",
 								value = {"CustomWaypoints", "LOOT", "COLOR"},
 								visible_reqs = {},
 								enabled_reqs = {
@@ -1326,30 +1247,211 @@ if WolfgangHUD then
 							},
 						},
 					},
+					{ -- General
+						type = "header",
+						text_id = "wolfganghud_hud_general_name",
+					},
+					{
+						type = "multi_choice",
+						name_id = "wolfganghud_hud_layout_title",
+						desc_id = "wolfganghud_hud_layout_desc",
+						restart = true,
+						value = {"HUD", "LAYOUT"},
+						visible_reqs = {},
+						enabled_reqs = {},
+						options = {
+							"wolfganghud_hudlayouts_vanilla",
+							"wolfganghud_hudlayouts_pd2style"
+						},
+					},
+					{
+						type = "toggle",
+						name_id = "wolfganghud_colorize_names_title",
+						desc_id = "wolfganghud_colorize_names_desc",
+						value = {"HUD", "COLORIZE_NAMES"},
+						visible_reqs = {},
+						enabled_reqs = {},
+					},
+					{
+						type = "multi_choice",
+						name_id = "wolfganghud_hud_colorize_mode_title",
+						desc_id = "wolfganghud_hud_colorize_mode_desc",
+						value = {"HUD", "COLORIZE_MODE"},
+						visible_reqs = {},
+						enabled_reqs = {},
+						options = {
+							"wolfganghud_colorize_modes_by_net_synced_outlines",
+							"wolfganghud_colorize_modes_by_local_ui_panels"
+						},
+					},
+					{
+						type = "toggle",
+						name_id = "wolfganghud_levels_before_name_title",
+						desc_id = "wolfganghud_levels_before_name_desc",
+						value = {"HUD", "LEVELS_BEFORE_NAME"},
+						visible_reqs = {},
+						enabled_reqs = {},
+					},
+					{
+						type = "toggle",
+						name_id = "wolfganghud_hide_in_camp_title",
+						desc_id = "wolfganghud_hide_in_camp_desc",
+						value = {"HUD", "SHOW_IN_CAMP"},
+						visible_reqs = {},
+						enabled_reqs = {},
+						invert_value = true,
+					},
+					{ -- Chat
+						type = "header",
+						text_id = "wolfganghud_menu_chat_name",
+					},
+					{
+						type = "toggle",
+						name_id = "wolfganghud_chat_typing_info_title",
+						desc_id = "wolfganghud_chat_typing_info_desc",
+						value = {"CHAT", "TYPING_INFO"},
+						visible_reqs = {},
+						enabled_reqs = {},
+					},
+					{
+						type = "toggle",
+						name_id = "wolfganghud_chat_own_left_title",
+						desc_id = "wolfganghud_chat_own_left_desc",
+						value = {"CHAT", "OWN_LEFT"},
+						visible_reqs = {},
+						enabled_reqs = {},
+					},
+					{
+						type = "toggle",
+						name_id = "wolfganghud_chat_colorize_title",
+						desc_id = "wolfganghud_chat_colorize_desc",
+						value = {"CHAT", "COLORIZE"},
+						visible_reqs = {},
+						enabled_reqs = {
+							{setting = {"HUD", "COLORIZE_NAMES"}, invert = false},
+						},
+					},
+					{
+						type = "toggle",
+						name_id = "wolfganghud_chat_colored_bg_title",
+						desc_id = "wolfganghud_chat_colored_bg_desc",
+						value = {"CHAT", "COLORED_BG"},
+						visible_reqs = {},
+						enabled_reqs = {},
+					},
+					{
+						type = "multi_choice",
+						name_id = "wolfganghud_chat_scrollbar_title",
+						desc_id = "wolfganghud_chat_scrollbar_desc",
+						value = {"CHAT", "SCROLLBAR"},
+						visible_reqs = {},
+						enabled_reqs = {},
+						options = {
+							"wolfganghud_chat_scrollbar_off",
+							"wolfganghud_chat_scrollbar_left",
+							"wolfganghud_chat_scrollbar_right",
+						},
+					},
+					{
+						type = "slider",
+						name_id = "wolfganghud_chat_height_title",
+						desc_id = "wolfganghud_chat_height_desc",
+						value = {"CHAT", "HEIGHT"},
+						visible_reqs = {},
+						enabled_reqs = {},
+						min_value = 240,
+						max_value = 800,
+						decimal_places = 0,
+					},
+					{
+						type = "slider",
+						name_id = "wolfganghud_chat_width_title",
+						desc_id = "wolfganghud_chat_width_desc",
+						value = {"CHAT", "WIDTH"},
+						visible_reqs = {},
+						enabled_reqs = {},
+						min_value = 384,
+						max_value = 900,
+						decimal_places = 0,
+					},
+					{
+						type = "slider",
+						name_id = "wolfganghud_chat_name_spacing_title",
+						desc_id = "wolfganghud_chat_name_spacing_desc",
+						value = {"CHAT", "NAME_SPACING"},
+						visible_reqs = {},
+						enabled_reqs = {},
+						min_value = 0,
+						max_value = 10,
+						decimal_places = 0,
+					},
+					{
+						type = "slider",
+						name_id = "wolfganghud_chat_line_gap_title",
+						desc_id = "wolfganghud_chat_line_gap_desc",
+						value = {"CHAT", "MESSAGE_SPACING"},
+						visible_reqs = {},
+						enabled_reqs = {},
+						min_value = 0,
+						max_value = 30,
+						decimal_places = 0,
+					},
+					{
+						type = "slider",
+						name_id = "wolfganghud_chat_hide_delay_title",
+						desc_id = "wolfganghud_chat_hide_delay_desc",
+						value = {"CHAT", "HIDE_DELAY"},
+						visible_reqs = {},
+						enabled_reqs = {},
+						min_value = 0,
+						max_value = 60,
+						decimal_places = 0,
+					},
+					{
+						type = "slider",
+						name_id = "wolfganghud_chat_messages_kept_title",
+						desc_id = "wolfganghud_chat_messages_kept_desc",
+						value = {"CHAT", "MESSAGES_KEPT"},
+						visible_reqs = {},
+						enabled_reqs = {},
+						min_value = 10,
+						max_value = 200,
+						decimal_places = 0,
+					},
 				},
 			},
 			{	-- Menu Options
 				type = "menu",
 				menu_id = "wolfganghud_menu_options_menu",
+				icon = "menu_item_options",
 				name_id = "wolfganghud_menu_options_name",
 				visible_reqs = {},
 				enabled_reqs = {},
 				options = {
 					{ -- Main Menu
-						y_offset = 320,
 						type = "header",
 						text_id = "wolfganghud_menu_main_menu_name",
 					},
 					{
 						type = "toggle",
 						name_id = "wolfganghud_skip_intro_title",
+						desc_id = "wolfganghud_skip_intro_desc",
 						value = {"MENU", "SKIP_INTRO"},
 						visible_reqs = {},
 						enabled_reqs = {},
 					},
 					{
 						type = "toggle",
+						name_id = "wolfganghud_skip_titlescreen_title",
+						desc_id = "wolfganghud_skip_titlescreen_desc",
+						value = {"MENU", "SKIP_TITLESCREEN"},
+						visible_reqs = {},
+						enabled_reqs = {},
+					},
+					{
+						type = "toggle",
 						name_id = "wolfganghud_streamline_menu_title",
+						desc_id = "wolfganghud_streamline_menu_desc",
 						value = {"MENU", "STREAMLINE"},
 						visible_reqs = {},
 						enabled_reqs = {},
@@ -1357,6 +1459,7 @@ if WolfgangHUD then
 					{
 						type = "toggle",
 						name_id = "wolfganghud_add_join_menu_offline_title",
+						desc_id = "wolfganghud_add_join_menu_offline_desc",
 						value = {"MENU", "ADD_JOIN_MENU_OFFLINE"},
 						visible_reqs = {},
 						enabled_reqs = {},
@@ -1368,6 +1471,7 @@ if WolfgangHUD then
 					{
 						type = "toggle",
 						name_id = "wolfganghud_waiting_info_title",
+						desc_id = "wolfganghud_waiting_info_desc",
 						value = {"MENU", "WAITING_INFO"},
 						visible_reqs = {},
 						enabled_reqs = {},
@@ -1375,6 +1479,7 @@ if WolfgangHUD then
 					{
 						type = "multi_choice",
 						name_id = "wolfganghud_end_stats_title",
+						desc_id = "wolfganghud_end_stats_desc",
 						value = {"MENU", "END_STATS"},
 						visible_reqs = {},
 						enabled_reqs = {},
@@ -1387,22 +1492,19 @@ if WolfgangHUD then
 					{
 						type = "toggle",
 						name_id = "wolfganghud_ready_on_num_enter_title",
+						desc_id = "wolfganghud_ready_on_num_enter_desc",
 						value = {"MENU", "READY_UP_ON_NUM_ENTER"},
 						visible_reqs = {},
 						enabled_reqs = {},
 					},
-					{
-						type = "divider",
-						y_offset = 100, -- shift for next header
-					},
 					{ -- Missions
-						y_offset = 320,
 						type = "header",
 						text_id = "wolfganghud_menu_missions_name",
 					},
 					{
 						type = "toggle",
 						name_id = "wolfganghud_mark_stealthables_title",
+						desc_id = "wolfganghud_mark_stealthables_desc",
 						value = {"MENU", "MARK_STEALTHABLES"},
 						visible_reqs = {},
 						enabled_reqs = {},
@@ -1414,6 +1516,7 @@ if WolfgangHUD then
 					{
 						type = "toggle",
 						name_id = "wolfganghud_show_hidden_weapon_stats_title",
+						desc_id = "wolfganghud_show_hidden_weapon_stats_desc",
 						value = {"MENU", "SHOW_HIDDEN_WEAPON_STATS"},
 						visible_reqs = {},
 						enabled_reqs = {},
@@ -1421,6 +1524,7 @@ if WolfgangHUD then
 					{
 						type = "toggle",
 						name_id = "wolfganghud_show_weapon_stat_diff_title",
+						desc_id = "wolfganghud_show_weapon_stat_diff_desc",
 						value = {"MENU", "SHOW_WEAPON_STAT_DIFF"},
 						visible_reqs = {},
 						enabled_reqs = {},
@@ -1428,6 +1532,7 @@ if WolfgangHUD then
 					{
 						type = "toggle",
 						name_id = "wolfganghud_fix_skill_preview_title",
+						desc_id = "wolfganghud_fix_skill_preview_desc",
 						value = {"MENU", "FIX_SKILL_PREVIEW"},
 						visible_reqs = {},
 						enabled_reqs = {},
@@ -1435,6 +1540,7 @@ if WolfgangHUD then
 					{
 						type = "toggle",
 						name_id = "wolfganghud_convert_sizes_meters_title",
+						desc_id = "wolfganghud_convert_sizes_meters_desc",
 						value = {"MENU", "CONVERT_SIZES_TO_METERS"},
 						visible_reqs = {},
 						enabled_reqs = {},
@@ -1444,18 +1550,19 @@ if WolfgangHUD then
 			{	-- Gameplay
 				type = "menu",
 				menu_id = "wolfganghud_gameplay_options_menu",
+				icon = "menu_item_resume",
 				name_id = "wolfganghud_gameplay_options_name",
 				visible_reqs = {},
 				enabled_reqs = {},
 				options = {
 					{ -- General
-						y_offset = 320,
 						type = "header",
 						text_id = "wolfganghud_gameplay_general_name",
 					},
 					{
 						type = "toggle",
 						name_id = "wolfganghud_fov_based_sensivity_title",
+						desc_id = "wolfganghud_fov_based_sensivity_desc",
 						value = {"GAMEPLAY", "FOV_BASED_SENSIVITY"},
 						visible_reqs = {},
 						enabled_reqs = {},
@@ -1463,6 +1570,7 @@ if WolfgangHUD then
 					{
 						type = "toggle",
 						name_id = "wolfganghud_no_slowmotion_title",
+						desc_id = "wolfganghud_no_slowmotion_desc",
 						value = {"GAMEPLAY", "NO_SLOWMOTION"},
 						visible_reqs = {},
 						enabled_reqs = {},
@@ -1470,6 +1578,7 @@ if WolfgangHUD then
 					{
 						type = "toggle",
 						name_id = "wolfganghud_auto_reload_title",
+						desc_id = "wolfganghud_auto_reload_desc",
 						value = {"GAMEPLAY", "AUTO_RELOAD"},
 						visible_reqs = {},
 						enabled_reqs = {},
@@ -1477,6 +1586,7 @@ if WolfgangHUD then
 					{
 						type = "toggle",
 						name_id = "wolfganghud_auto_reload_single_title",
+						desc_id = "wolfganghud_auto_reload_single_desc",
 						value = {"GAMEPLAY", "AUTO_RELOAD_SINGLE"},
 						visible_reqs = {},
 						enabled_reqs = {},
@@ -1488,22 +1598,19 @@ if WolfgangHUD then
 					{
 						type = "toggle",
 						name_id = "wolfganghud_realistic_reload_title",
+						desc_id = "wolfganghud_realistic_reload_desc",
 						value = {"GAMEPLAY", "REALISTIC_RELOAD"},
 						visible_reqs = {},
 						enabled_reqs = {},
 					},
-					{
-						type = "divider",
-						y_offset = 100, -- shift for next header
-					},
 					{ -- Interaction Lock
-						y_offset = 320,
 						type = "header",
 						text_id = "wolfganghud_gameplay_press2hold_name",
 					},
 					{
 						type = "multi_choice",
 						name_id = "wolfganghud_press2hold_lock_mode_title",
+						desc_id = "wolfganghud_press2hold_lock_mode_desc",
 						options = {
 							"wolfganghud_multiselect_disabled",
 							"wolfganghud_press2hold_lock_mode_progress",
@@ -1516,6 +1623,7 @@ if WolfgangHUD then
 					{
 						type = "slider",
 						name_id = "wolfganghud_press2hold_min_timer_duration_title",
+						desc_id = "wolfganghud_press2hold_min_timer_duration_desc",
 						value = {"INTERACTION", "MIN_TIMER_DURATION"},
 						visible_reqs = {},
 						enabled_reqs = {
@@ -1528,6 +1636,7 @@ if WolfgangHUD then
 					{
 						type = "toggle",
 						name_id = "wolfganghud_press2hold_show_lockindicator_title",
+						desc_id = "wolfganghud_press2hold_show_lockindicator_desc",
 						value = {"INTERACTION", "SHOW_LOCK_INDICATOR"},
 						visible_reqs = {},
 						enabled_reqs = {
@@ -1538,6 +1647,7 @@ if WolfgangHUD then
 					{
 						type = "toggle",
 						name_id = "wolfganghud_press2hold_equipment_cancel_title",
+						desc_id = "wolfganghud_press2hold_equipment_cancel_desc",
 						value = {"INTERACTION", "EQUIPMENT_PRESS_INTERRUPT"},
 						visible_reqs = {},
 						enabled_reqs = {
@@ -1547,6 +1657,7 @@ if WolfgangHUD then
 					{
 						type = "toggle",
 						name_id = "wolfganghud_press2hold_interrupt_hint_title",
+						desc_id = "wolfganghud_press2hold_interrupt_hint_desc",
 						value = {"INTERACTION", "SHOW_INTERRUPT_HINT"},
 						visible_reqs = {},
 						enabled_reqs = {
@@ -1556,24 +1667,21 @@ if WolfgangHUD then
 					{
 						type = "toggle",
 						name_id = "wolfganghud_press2hold_no_lock_when_driving",
+						desc_id = "wolfganghud_press2hold_no_lock_when_driving_desc",
 						value = {"INTERACTION", "NO_LOCK_WHEN_DRIVING"},
 						visible_reqs = {},
 						enabled_reqs = {
 							{setting = {"INTERACTION", "LOCK_MODE"}, min = 2, max = 3},
 						},
 					},
-					{
-						type = "divider",
-						y_offset = 100, -- shift for next header
-					},
 					{ -- Interaction Tweaks
-						y_offset = 320,
 						type = "header",
 						text_id = "wolfganghud_interaction_tweaks_name",
 					},
 					{
 						type = "toggle",
 						name_id = "wolfganghud_interaction_turrets_stealth_disabled_title",
+						desc_id = "wolfganghud_interaction_turrets_stealth_disabled_desc",
 						value = {"GAMEPLAY", "INTERACTION", "TURRETS_STEALTH_DISABLED"},
 						visible_reqs = {},
 						enabled_reqs = {},
@@ -1581,6 +1689,7 @@ if WolfgangHUD then
 					{
 						type = "toggle",
 						name_id = "wolfganghud_interaction_revive_allow_full_health_title",
+						desc_id = "wolfganghud_interaction_revive_allow_full_health_desc",
 						value = {"GAMEPLAY", "INTERACTION", "REVIVE_ALLOW_FULL_HEALTH"},
 						visible_reqs = {},
 						enabled_reqs = {},
@@ -1588,6 +1697,7 @@ if WolfgangHUD then
 					{
 						type = "toggle",
 						name_id = "wolfganghud_interaction_revive_block_max_revives_title",
+						desc_id = "wolfganghud_interaction_revive_block_max_revives_desc",
 						value = {"GAMEPLAY", "INTERACTION", "REVIVE_BLOCK_MAX_REVIVES"},
 						visible_reqs = {},
 						enabled_reqs = {},
@@ -1597,18 +1707,19 @@ if WolfgangHUD then
 			{	-- Hosting
 				type = "menu",
 				menu_id = "wolfganghud_host_options_menu",
+				icon = "menu_item_network",
 				name_id = "wolfganghud_host_options_name",
 				visible_reqs = {},
 				enabled_reqs = {},
 				options = {
 					{ -- General
-						y_offset = 320,
 						type = "header",
 						text_id = "wolfganghud_hosting_general_name",
 					},
 					{
 						type = "toggle",
 						name_id = "wolfganghud_kick_a_friend_title",
+						desc_id = "wolfganghud_kick_a_friend_desc",
 						value = {"HOST", "KICK_A_FRIEND"},
 						visible_reqs = {},
 						enabled_reqs = {},
@@ -1616,6 +1727,7 @@ if WolfgangHUD then
 					{
 						type = "toggle",
 						name_id = "wolfganghud_instant_restart_title",
+						desc_id = "wolfganghud_instant_restart_desc",
 						value = {"HOST", "INSTANT_RESTART"},
 						visible_reqs = {},
 						enabled_reqs = {},
@@ -1623,6 +1735,7 @@ if WolfgangHUD then
 					{
 						type = "keybind",
 						name_id = "wolfganghud_restart_hotkey_title",
+						desc_id = "wolfganghud_restart_hotkey_desc",
 						keybind_id = "wolfganghud_restart_hotkey",
 						visible_reqs = {},
 						enabled_reqs = {},
@@ -1632,18 +1745,19 @@ if WolfgangHUD then
 			{	-- Sound
 				type = "menu",
 				menu_id = "wolfganghud_sound_options_menu",
+				icon = "menu_item_sound",
 				name_id = "wolfganghud_sound_options_name",
 				visible_reqs = {},
 				enabled_reqs = {},
 				options = {
 					{ -- General
-						y_offset = 320,
 						type = "header",
 						text_id = "wolfganghud_sound_general_name",
 					},
 					{
 						type = "toggle",
 						name_id = "wolfganghud_sound_mute_toasts_title",
+						desc_id = "wolfganghud_sound_mute_toasts_desc",
 						value = {"SOUND", "MUTE_TOASTS"},
 						visible_reqs = {},
 						enabled_reqs = {},

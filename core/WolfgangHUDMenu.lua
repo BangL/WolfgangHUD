@@ -3,9 +3,6 @@ WolfgangHUDMenu = WolfgangHUDMenu or class(BLTMenu)
 
 function WolfgangHUDMenu:Init(root, args)
 
-	local next_menu_button_x = 0
-	local next_menu_button_y = 122
-	local menu_button_count = 0
 	local index = 0
 
 	self.enabled_req_maps = {}
@@ -19,28 +16,17 @@ function WolfgangHUDMenu:Init(root, args)
 			self[clbk_id] = self[clbk_id] or function(self, value, item)
 				managers.raid_menu:open_menu(data.menu_id)
 			end
-			local item = self:LongRoundedButton({
+			local item = self:NewMenuButton({
 				index = index,
 				name = id,
 				text = data.name_id,
 				localize = true,
+				icon = data.icon,
 				callback = callback(self, self, clbk_id),
-				ignore_align = true,
-				x = next_menu_button_x,
-				y = next_menu_button_y,
-				h = 50,
-				w = 275,
 				auto_select_on_hover = true,
 			})
 			if data.visible_reqs or data.enabled_reqs then
 				self:_add_enabled_reqs(item, data)
-			end
-			next_menu_button_x = next_menu_button_x + item:w() + 10
-			menu_button_count = menu_button_count + 1
-			if menu_button_count == 6 then
-				menu_button_count = 0
-				next_menu_button_x = 0
-				next_menu_button_y = next_menu_button_y + 70
 			end
 			table.insert(self.additional_active_controls, item)
 		end,
@@ -63,6 +49,8 @@ function WolfgangHUDMenu:Init(root, args)
 				x_offset = data.x_offset or 0,
 				y_offset = data.y_offset or 10,
 				auto_select_on_hover = true,
+				desc = self:_get_desc(data),
+				localize_desc = false,
 			})
 			if data.visible_reqs or data.enabled_reqs then
 				self:_add_enabled_reqs(item, data)
@@ -90,6 +78,8 @@ function WolfgangHUDMenu:Init(root, args)
 				x_offset = data.x_offset or 0,
 				y_offset = data.y_offset or 10,
 				auto_select_on_hover = true,
+				desc = self:_get_desc(data),
+				localize_desc = false,
 			})
 			if data.visible_reqs or data.enabled_reqs then
 				self:_add_enabled_reqs(item, data)
@@ -135,6 +125,8 @@ function WolfgangHUDMenu:Init(root, args)
 					x_offset = data.x_offset or 0,
 					y_offset = data.y_offset or 10,
 					auto_select_on_hover = true,
+					desc = self:_get_desc(data),
+					localize_desc = false,
 				})
 				if data.visible_reqs or data.enabled_reqs then
 					self:_add_enabled_reqs(item, data)
@@ -182,6 +174,8 @@ function WolfgangHUDMenu:Init(root, args)
 				x_offset = data.x_offset or 0,
 				y_offset = data.y_offset or 10,
 				auto_select_on_hover = true,
+				desc = self:_get_desc(data),
+				localize_desc = false,
 			})
 			if data.visible_reqs or data.enabled_reqs then
 				self:_add_enabled_reqs(item, data)
@@ -198,6 +192,8 @@ function WolfgangHUDMenu:Init(root, args)
 				x_offset = data.x_offset or 0,
 				y_offset = data.y_offset or 10,
 				auto_select_on_hover = true,
+				desc = self:_get_desc(data),
+				localize_desc = false,
 			})
 			if data.visible_reqs or data.enabled_reqs then
 				self:_add_enabled_reqs(item, data)
@@ -241,13 +237,15 @@ function WolfgangHUDMenu:Init(root, args)
 	})
 	-- Populate header
 	index = index + 1
-	self:SubTitle({
+	local subtitle = self:SubTitle({
 		index = index,
 		text = args.name_id,
 		localize = args.name_id ~= nil,
 		ignore_align = true,
 		y = title:h()
 	})
+	-- header stays fixed, everything below scrolls in a single left column
+	self:EnableScrolling({ y = subtitle:bottom() + 10 })
 	self:AutoBindNamedControlsBegin()
 	-- Populate menu items
 	for _, data in ipairs(args.options) do
@@ -272,6 +270,16 @@ function WolfgangHUDMenu:Init(root, args)
 		table.insert(self.additional_active_controls, item)
 	end
 	self:AutoBindNamedControlsEnd()
+end
+
+-- hover description: the entry's own text, plus a note if changing it needs a restart to the main menu
+function WolfgangHUDMenu:_get_desc(data)
+	local desc = data.desc_id and managers.localization:text(data.desc_id)
+	if data.restart then
+		local note = managers.localization:text("wolfganghud_restart_required")
+		desc = desc and (desc .. " " .. note) or note
+	end
+	return desc
 end
 
 function WolfgangHUDMenu:_additional_active_controls()
