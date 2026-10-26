@@ -529,6 +529,29 @@ if string.lower(RequiredScript) == "lib/setups/setup" then
 				[100629] = true, -- greed cache
 			},
 		},
+		-- loot only reachable when a random door pair is open (see LootFixer)
+		DOOR_AREAS = {
+			-- Tiger Trap
+			tnd = {
+				-- ElementDisableUnit (sewer_entrance_*) executed by the random -> area with open doors
+				open = {
+					[101739] = "n", -- ss, doors 141 + 143
+					[100119] = "w", -- se, doors 144 + 146
+					[101740] = "w", -- ne, doors 144 + 146
+					[101741] = "s", -- nn, doors 142 + 145 (no loot)
+				},
+				items = {
+					-- north: between doors 141 and 143
+					[100567] = "n", [100483] = "n", [100568] = "n", [100584] = "n", [100480] = "n", [100484] = "n",
+					-- north: sewers in front of door 141
+					[100482] = "n", [100583] = "n", [100481] = "n",
+					-- west: between doors 144 and 146
+					[100580] = "w", [100479] = "w", [100563] = "w", [100564] = "w", [100581] = "w",
+					-- west: sewers in front of door 144
+					[100565] = "w", [100566] = "w", [100582] = "w",
+				},
+			},
+		},
 		IGNORE_INACTIVE = {
 			hold_take_canister = true,
 			press_take_canister = true,
@@ -647,6 +670,28 @@ if string.lower(RequiredScript) == "lib/setups/setup" then
 
 	-- INTERACTIVE UNIT
 
+	function GameInfoManager:_is_closed_door_area_unit(job_id, unit)
+		local areas = GameInfoManager._INTERACTIONS.DOOR_AREAS[job_id]
+		local area = areas and areas.items[unit:editor_id() % 1000000]
+		if not area then
+			return false
+		end
+		local world_id = managers.worldcollection:get_worlddefinition_by_unit_id(unit:unit_data().unit_id):world_id()
+		local mission = managers.worldcollection._missions[world_id]
+		if not mission then
+			return false
+		end
+		for _, script in pairs(mission._scripts) do
+			for element_id, open_area in pairs(areas.open) do
+				local element = script._elements[element_id]
+				if element and element._has_executed then
+					return area ~= open_area
+				end
+			end
+		end
+		return false
+	end
+
 	function GameInfoManager:_interactive_unit_event(event, key, data)
 		local lookup = GameInfoManager._INTERACTIONS
 
@@ -654,6 +699,9 @@ if string.lower(RequiredScript) == "lib/setups/setup" then
 			and managers.raid_job:current_operation_event().mission_id
 			or managers.raid_job:current_job_id()
 		if lookup.IGNORE_IDS[job_id] and (lookup.IGNORE_IDS[job_id][data.editor_id % 1000000]) then
+			return
+		end
+		if self:_is_closed_door_area_unit(job_id, data.unit) then
 			return
 		end
 
