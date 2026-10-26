@@ -5,8 +5,8 @@
 -- WolfgangHUD sends its own exact numbers to the other WolfgangHUDs
 -- (WolfgangHUD.Sync), whatever its own mode is. Players without WolfgangHUD
 -- are filled in from the host's statistics, if we are the host. A host with
--- WolfgangHUD also relays what it knows about the others to the WolfgangHUD
--- clients, so they have those players too. Last resort is our own count of the
+-- WolfgangHUD also relays what it knows about the others (with or without
+-- WolfgangHUD) to the WolfgangHUD clients, so they have those players too. Last resort is our own count of the
 -- kills we saw, marked as an estimate.
 --
 -- Priority of the numbers of a player: its own WolfgangHUD > the host's view
@@ -133,20 +133,21 @@ if string.lower(RequiredScript) == "lib/managers/statisticsmanager" then
 		}
 	end
 
-	-- The host's view of the players without WolfgangHUD, once it has it (or gave up waiting)
+	-- The host's view of the other players, once it has it (or gave up waiting). Those with
+	-- WolfgangHUD are included too, clients may not have reached them directly.
 	function EndStats:try_relay()
 		local session = managers.network and managers.network:session()
 		if not session or not Network:is_server() or self._relay then
 			return
 		end
 
-		local unknown = {}
+		local known = {}
 		local complete = true
 		for _, peer in pairs(session:all_peers()) do
-			if peer ~= session:local_peer() and not WolfgangHUD.Sync.peers[peer:id()] then
-				local stats = peer:statistics()
+			if peer ~= session:local_peer() then
+				local stats = self._stats[peer:id()] or peer:statistics()
 				if stats then
-					unknown[tostring(peer:id())] = stats
+					known[tostring(peer:id())] = stats
 				else
 					complete = false
 				end
@@ -160,7 +161,7 @@ if string.lower(RequiredScript) == "lib/managers/statisticsmanager" then
 			return
 		end
 
-		self._relay = {peers = unknown}
+		self._relay = {peers = known}
 		WolfgangHUD.Sync:send_to_all_discovered_peers(self.EVENT_RELAY, self._relay)
 	end
 
