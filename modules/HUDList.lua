@@ -848,6 +848,9 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 	end
 
 	function HUDList.ItemBase:_set_item_visible(status)
+		if not alive(self._panel) then
+			return
+		end
 		self._panel:set_visible(status and self:enabled())
 	end
 
@@ -948,6 +951,9 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 	end
 
 	function HUDList.ItemBase:_fade(target_alpha, instant, time_override)
+		if not alive(self._panel) then
+			return
+		end
 		self._panel:stop()
 		self._active_fade = {instant = instant or self._panel:alpha() == target_alpha, alpha = target_alpha, time_override = time_override}
 		self:_animate_item()
@@ -962,6 +968,9 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 	end
 
 	function HUDList.ItemBase:cancel_move()
+		if not alive(self._panel) then
+			return
+		end
 		self._panel:stop()
 		self._active_move = nil
 		self:_animate_item()
@@ -1744,6 +1753,9 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 			item:set_color(color)
 			while t > 0 do
 				t = t - coroutine.yield()
+				if not alive(item) then
+					return
+				end
 				local ratio = math.clamp(t / duration, 0, 1)
 				local new_color = math.lerp(self._default_text_color, color, ratio)
 				item:set_color(new_color)

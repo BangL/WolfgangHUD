@@ -30,6 +30,9 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudteammatepeer" then
     end
 
     function HUDTeammatePeer:update_ping_info(t, dt)
+        if not alive(self._right_panel) then
+            return
+        end
         local ping_panel = self._right_panel:child("ping_panel")
         if ping_panel then
             ping_panel:set_visible(WolfgangHUD:getSetting({ "HUD", "PEER", "PING", "SHOW" }, true))
