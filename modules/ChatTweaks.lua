@@ -58,11 +58,11 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudchat" then
 	end
 
 	function ChatTweaks:width()
-		return setting("WIDTH", 512)
+		return setting("WIDTH", 450)
 	end
 
 	function ChatTweaks:height()
-		return setting("HEIGHT", 432)
+		return setting("HEIGHT", 450)
 	end
 
 	function ChatTweaks:kept()

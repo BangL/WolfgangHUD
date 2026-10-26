@@ -120,7 +120,7 @@ if WolfgangHUD then
 				ANGLE							= 35,
 				DISTANCE						= 3000,
 				COLOR							= "white",
-				HIDE_UNINTERACTABLE				= true,
+				HIDE_UNINTERACTABLE				= false,
 				REVIVES							= true,
 				REVIVES_COLOR					= "light_green",
 			},
@@ -135,16 +135,16 @@ if WolfgangHUD then
 		},
 		CHAT = {
 			TYPING_INFO							= true,
-			OWN_LEFT							= false,
+			OWN_LEFT							= true,
 			COLORIZE							= true,
 			COLORED_BG							= false,
-			SCROLLBAR							= 3,
-			HEIGHT								= 432,
-			WIDTH								= 512,
-			NAME_SPACING						= 4,
-			MESSAGE_SPACING						= 7,
-			HIDE_DELAY							= 8,
-			MESSAGES_KEPT						= 40,
+			SCROLLBAR							= 2,
+			HEIGHT								= 450,
+			WIDTH								= 450,
+			NAME_SPACING						= 0,
+			MESSAGE_SPACING						= 0,
+			HIDE_DELAY							= 30,
+			MESSAGES_KEPT						= 200,
 		},
 		GAMEPLAY = {
 			FOV_BASED_SENSIVITY					= true,
@@ -155,7 +155,7 @@ if WolfgangHUD then
 			INTERACTION = {
 				TURRETS_STEALTH_DISABLED			= true,
 				REVIVE_ALLOW_FULL_HEALTH			= true,
-				REVIVE_BLOCK_MAX_REVIVES			= true,
+				REVIVE_BLOCK_MAX_REVIVES			= false,
 			}
 		},
 		GAME_SETTINGS = {
@@ -190,7 +190,7 @@ if WolfgangHUD then
 			KICK_A_FRIEND						= true,
 		},
 		SOUND = {
-			MUTE_TOASTS							= false,
+			MUTE_TOASTS							= true,
 		},
 	}
 	WolfgangHUD.settings = deep_clone(WolfgangHUD.default_settings)
