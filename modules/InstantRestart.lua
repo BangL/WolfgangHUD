@@ -1,10 +1,13 @@
-if string.lower(RequiredScript) == "lib/tweak_data/tweakdata" then
+if string.lower(RequiredScript) == "lib/managers/votemanager" then
 
-	if tweak_data then
-		if Network:is_server() and WolfgangHUD:getSetting({"HOST", "INSTANT_RESTART"}, true) then
-			tweak_data.voting = tweak_data.voting or {}
-			tweak_data.voting.restart_delay = 0
-		end
+	local restart_counter_original = VoteManager._restart_counter
+	local default_delay
+
+	function VoteManager:_restart_counter(...)
+		default_delay = default_delay or tweak_data.voting.restart_delay
+		local instant = Network:is_server() and WolfgangHUD:getSetting({"HOST", "INSTANT_RESTART"}, true)
+		tweak_data.voting.restart_delay = instant and 0 or default_delay
+		return restart_counter_original(self, ...)
 	end
 
 end
