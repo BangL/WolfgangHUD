@@ -750,6 +750,15 @@ if string.lower(RequiredScript) == "lib/setups/setup" then
 		end
 	end
 
+	-- units deleted without an interaction destroy (e.g. greed items culled on drop-in) would stay counted forever
+	function GameInfoManager:_remove_dead_pickups()
+		for key, pickup in pairs(self._pickups) do
+			if not alive(pickup.unit) then
+				self:_pickup_interaction_handler("remove", key, {interact_id = pickup.interact_id})
+			end
+		end
+	end
+
 	function GameInfoManager:_pickup_count_event(event, interact_id, value, data)
 		if event == "change" then
 			if value ~= 0 then
@@ -840,6 +849,10 @@ elseif string.lower(RequiredScript) == "lib/managers/objectinteractionmanager" t
 	function ObjectInteractionManager:update(t, ...)
 		update_original(self, t, ...)
 		self:_process_queued_units(t)
+		if not self._next_dead_pickup_check or t >= self._next_dead_pickup_check then
+			self._next_dead_pickup_check = t + 1
+			managers.gameinfo:_remove_dead_pickups()
+		end
 	end
 
 	function ObjectInteractionManager:add_unit(unit, ...)
