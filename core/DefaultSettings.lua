@@ -73,6 +73,7 @@ if WolfgangHUD then
 		},
 		MENU = {
 			SKIP_INTRO							= true,
+			SKIP_TITLESCREEN					= false,
 			WAITING_INFO						= true,
 			END_STATS							= 2,
 			STREAMLINE							= true,

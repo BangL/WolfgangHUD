@@ -168,6 +168,8 @@
 
 	"wolfganghud_menu_options_name"									:	"Menu",
 	"wolfganghud_menu_main_menu_name"								:		"Main Menu",
+	"wolfganghud_skip_titlescreen_title"						:			"Skip Title Screen",
+	"wolfganghud_skip_titlescreen_desc"						:			"Go straight to the main menu without waiting for a key press. Applies from the next game start.",
 	"wolfganghud_skip_intro_title"									:			"Skip Intro",
 	"wolfganghud_streamline_menu_title"								:			"Streamline main menu",
 	"wolfganghud_add_join_menu_offline_title"						:			"Add \"servers\" to offline camp",
