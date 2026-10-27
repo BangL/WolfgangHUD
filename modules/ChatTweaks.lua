@@ -12,10 +12,14 @@
 -- a segment of its own; one that continues the previous sender's talk hides its name, which
 -- looks like vanilla.
 --
+-- Mouse: while the chat has focus the mouse pointer is shown. The wheel scrolls the history,
+-- a click on a message copies its text, a click on a link opens it (asks first); the right
+-- button always copies the message. Links are colored.
+--
 -- Typing info: WolfgangHUDs tell each other while they type (WolfgangHUD.Sync).
 --
 -- Fields set on a HUDChat: _wh_main (the chat on the HUD, not the ready up screen), _wh_message_w,
--- _wh_scroll, _wh_anchor (fixed end of a selection), _wh_mods (modifier keys), _wh_typing_sent.
+-- _wh_scroll, _wh_anchor (fixed end of a selection), _wh_mods (modifier keys), _wh_typing_sent, _wh_mouse (the pointer is ours).
 -- On a message block: _wh_own, _wh_continuation, _wh_fallback, _wh_bg_color.
 
 if string.lower(RequiredScript) == "lib/managers/hud/hudchat" then
@@ -42,6 +46,10 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudchat" then
 	ChatTweaks.TYPING_FONT_SIZE = tweak_data.gui.font_sizes.size_14
 	ChatTweaks.EVENT_TYPING = "chat_typing"
 	ChatTweaks.EVENT_TYPING_STOP = "chat_typing_stop"
+
+	ChatTweaks.MOUSE_ID = "wolfganghud_chat"
+	ChatTweaks.LINK_COLOR = Color(0.45, 0.7, 1)
+	ChatTweaks.FLASH_TIME = 0.4 -- seconds the clicked message lights up
 
 	ChatTweaks.INPUT_BG_PIECES = {"wolfganghud_input_bg_left", "wolfganghud_input_bg_middle", "wolfganghud_input_bg_right"}
 	ChatTweaks.SCROLL_TRACK = "wolfganghud_scroll_track"
@@ -415,6 +423,7 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudchat" then
 		block._name:set_color(color)
 		for _, line in ipairs(block._messages) do
 			line:set_color(color)
+			self:mark_links(line)
 		end
 	end
 
@@ -893,8 +902,172 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudchat" then
 		self._wh_anchor = nil
 		self._wh_scroll = 0
 		self._wh_mods = nil
+		guarded("pointer", function()
+			ChatTweaks:release_mouse(self)
+		end)
 
 		return loose_focus_original(self, ...)
+	end
+
+	-- ============ mouse: wheel, copy, links ============
+
+	local IDS_WHEEL_UP = Idstring("mouse wheel up")
+	local IDS_WHEEL_DOWN = Idstring("mouse wheel down")
+	local IDS_MOUSE_LEFT = Idstring("0")
+	local IDS_MOUSE_RIGHT = Idstring("1")
+
+	function ChatTweaks:mouse_enabled()
+		return setting("MOUSE", true)
+	end
+
+	-- The first link of a text and where it is (characters, not bytes: the text may hold umlauts)
+	function ChatTweaks:find_link(str)
+		for _, pattern in ipairs({"https?://[^%s]+", "www%.[^%s]+"}) do
+			local from, to = string.find(str, pattern)
+			if from then
+				local url = string.sub(str, from, to):gsub("[%.,;:!%?%)%]\"']+$", "")
+				if url ~= "" then
+					local first = utf8.len(string.sub(str, 1, from - 1)) or from - 1
+					return url, first, first + (utf8.len(url) or #url)
+				end
+			end
+		end
+	end
+
+	function ChatTweaks:mark_links(line)
+		local url, from, to = self:find_link(line:text())
+		if url then
+			pcall(line.set_range_color, line, from, to, self.LINK_COLOR)
+		end
+	end
+
+	-- The segment under the pointer (x, y: full screen workspace), and the text line under it
+	function ChatTweaks:message_at(chat, x, y)
+		x, y = managers.mouse_pointer:convert_mouse_pos(x, y)
+		for _, message in ipairs(chat._messages) do
+			local object = message._object
+			if object:visible() then
+				local top = object:world_y() + self:segment_top(message)
+				if x >= object:world_x() and x <= object:world_right() and y >= top and y <= top + self:segment_h(message) then
+					local panel = message._message_panel
+					for _, line in ipairs(message._messages) do
+						local line_y = panel:world_y() + line:y()
+						if y >= line_y and y <= line_y + line:h() then
+							return message, line
+						end
+					end
+					return message, message._messages[1]
+				end
+			end
+		end
+	end
+
+	function ChatTweaks:flash(message)
+		local object = message._object
+		local flash = object:child("wolfganghud_flash")
+		if not flash then
+			flash = object:rect({name = "wolfganghud_flash", layer = 5, color = Color.white, alpha = 0})
+		end
+		flash:set_shape(0, self:segment_top(message), object:w(), self:segment_h(message))
+		flash:stop()
+		flash:animate(function(o)
+			local t = 0
+			while t < self.FLASH_TIME do
+				t = t + coroutine.yield()
+				o:set_alpha(0.25 * (1 - math.min(t / self.FLASH_TIME, 1)))
+			end
+			o:set_alpha(0)
+		end)
+	end
+
+	function ChatTweaks:open_link(url)
+		if Utils and Utils.OpenUrlSafe then
+			-- the dialog needs the keyboard and the pointer
+			managers.hud:set_chat_focus(false)
+			Utils.OpenUrlSafe(url)
+		else
+			self:write_clipboard(url)
+		end
+	end
+
+	function ChatTweaks:mouse_press(chat, button, x, y)
+		if button == IDS_WHEEL_UP then
+			self:scroll(chat, self.LINE_SCROLL)
+		elseif button == IDS_WHEEL_DOWN then
+			self:scroll(chat, -self.LINE_SCROLL)
+		elseif button == IDS_MOUSE_LEFT or button == IDS_MOUSE_RIGHT then
+			local message, line = self:message_at(chat, x, y)
+			if not message then
+				return
+			end
+			local text = {}
+			for _, l in ipairs(message._messages) do
+				table.insert(text, l:text())
+			end
+			text = table.concat(text, "\n")
+
+			local url = button == IDS_MOUSE_LEFT and line and self:find_link(line:text())
+			self:flash(message)
+			if url then
+				self:open_link(url)
+			else
+				self:write_clipboard(text)
+			end
+		end
+	end
+
+	function ChatTweaks:mouse_move(chat, x, y)
+		local message, line = self:message_at(chat, x, y)
+		local link = message and line and self:find_link(line:text())
+		managers.mouse_pointer:set_pointer_image(link and "link" or message and "hand" or "arrow")
+	end
+
+	function ChatTweaks:use_mouse(chat)
+		if not chat._wh_main or chat._wh_mouse or not self:mouse_enabled() or not managers.mouse_pointer then
+			return
+		end
+		chat._wh_mouse = true
+		managers.mouse_pointer:use_mouse({
+			id = self.MOUSE_ID,
+			mouse_press = function(o, button, x, y)
+				guarded("mouse press", function()
+					self:mouse_press(chat, button, x, y)
+				end)
+			end,
+			mouse_move = function(o, x, y)
+				guarded("mouse move", function()
+					self:mouse_move(chat, x, y)
+				end)
+			end,
+		})
+	end
+
+	function ChatTweaks:release_mouse(chat)
+		if chat._wh_mouse then
+			chat._wh_mouse = nil
+			managers.mouse_pointer:set_pointer_image("arrow")
+			managers.mouse_pointer:remove_mouse(self.MOUSE_ID)
+		end
+	end
+
+	local on_focus_original = HUDChat._on_focus
+	function HUDChat:_on_focus(...)
+		local focused = self._focus
+		local result = on_focus_original(self, ...)
+		if not focused then
+			guarded("pointer", function()
+				ChatTweaks:use_mouse(self)
+			end)
+		end
+		return result
+	end
+
+	local remove_original = HUDChat.remove
+	function HUDChat:remove(...)
+		guarded("pointer", function()
+			ChatTweaks:release_mouse(self)
+		end)
+		return remove_original(self, ...)
 	end
 
 	-- ============ HUDChat: messages ============

@@ -1327,6 +1327,14 @@ if WolfgangHUD then
 					},
 					{
 						type = "toggle",
+						name_id = "wolfganghud_chat_mouse_title",
+						desc_id = "wolfganghud_chat_mouse_desc",
+						value = {"CHAT", "MOUSE"},
+						visible_reqs = {},
+						enabled_reqs = {},
+					},
+					{
+						type = "toggle",
 						name_id = "wolfganghud_chat_own_left_title",
 						desc_id = "wolfganghud_chat_own_left_desc",
 						value = {"CHAT", "OWN_LEFT"},

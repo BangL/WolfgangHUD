@@ -138,6 +138,7 @@ if WolfgangHUD then
 		},
 		CHAT = {
 			TYPING_INFO							= true,
+			MOUSE								= true,
 			OWN_LEFT							= true,
 			COLORIZE							= true,
 			COLORED_BG							= false,
