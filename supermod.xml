@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<mod name="WolfgangHUD"
+<mod name="WolfgangHUD" image="icon.png"
 	description="This is a Mod Collection of HUD altering scripts, as well as quality of life changes to the game and its menus."
 	priority="1"
 	author="BangL"
