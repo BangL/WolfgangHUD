@@ -147,6 +147,18 @@ if WolfgangHUD then
 								enabled_reqs = {},
 								value = {"HUD", "PEER", "PING", "SHOW"},
 							},
+							{ -- Downs
+								type = "header",
+								text_id = "wolfganghud_downs_name",
+							},
+							{
+								type = "toggle",
+								name_id = "wolfganghud_show_downs_title",
+								desc_id = "wolfganghud_show_downs_desc",
+								visible_reqs = {},
+								enabled_reqs = {},
+								value = {"HUD", "PEER", "DOWNS", "SHOW"},
+							},
 						},
 					},
 					{	-- Bot Panels

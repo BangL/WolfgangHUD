@@ -124,6 +124,14 @@
 				<post hook_id="lib/managers/hud/hudteammatepeer"/>
 			</group>
 
+			<group :script_path="Downs.lua">
+				<post hook_id="lib/managers/hudmanagerpd2"/>
+				<post hook_id="lib/network/handlers/unitnetworkhandler"/>
+				<post hook_id="lib/managers/raidjobmanager"/>
+				<post hook_id="lib/managers/hud/hudteammatebase"/>
+				<post hook_id="lib/managers/hud/hudteammatepeer"/>
+			</group>
+
 			<group :script_path="InteractionTimer.lua">
 				<post hook_id="lib/managers/hudmanagerpd2"/>
 				<post hook_id="lib/units/beings/player/states/playerstandard"/>

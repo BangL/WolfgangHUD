@@ -25,6 +25,9 @@ if WolfgangHUD then
 				PING = {
 					SHOW                        = true,
 				},
+				DOWNS = {
+					SHOW                        = true,
+				},
 			},
 			AI = {
 				KILLCOUNTER = {
