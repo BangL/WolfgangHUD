@@ -108,4 +108,16 @@ elseif string.lower(RequiredScript) == "lib/units/beings/player/huskplayermoveme
             self._unit:contour():change_color("teammate", tweak_data.peer_vector_colors[color_id])
         end
     end
+elseif string.lower(RequiredScript) == "lib/managers/hud/hudnamelabel" then
+    local _create_panel_original = HUDNameLabel._create_panel
+
+    -- vanilla width (200) cuts off long names; all children are centered on the panel width
+    HUDNameLabel.WH_W = 400
+
+    function HUDNameLabel:_create_panel(...)
+        _create_panel_original(self, ...)
+        if alive(self._object) then
+            self._object:set_w(HUDNameLabel.WH_W)
+        end
+    end
 end
