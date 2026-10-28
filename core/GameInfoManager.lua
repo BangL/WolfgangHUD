@@ -676,7 +676,11 @@ if string.lower(RequiredScript) == "lib/setups/setup" then
 		if not area then
 			return false
 		end
-		local world_id = managers.worldcollection:get_worlddefinition_by_unit_id(unit:unit_data().unit_id):world_id()
+		local world_def = managers.worldcollection:get_worlddefinition_by_unit_id(unit:unit_data().unit_id)
+		if not world_def then
+			return false
+		end
+		local world_id = world_def:world_id()
 		local mission = managers.worldcollection._missions[world_id]
 		if not mission then
 			return false
@@ -731,12 +735,12 @@ if string.lower(RequiredScript) == "lib/setups/setup" then
 	function GameInfoManager:_pickup_interaction_handler(event, key, data)
 		if event == "add" then
 			if not self._pickups[key] then
+				if data.unit.greed and data.unit:greed() and data.unit:greed().reserve_left and data.unit:greed():reserve_left() == 0 then -- ignore emptied greed caches as drop-in
+					return
+				end
 				self._pickups[key] = {unit = data.unit, interact_id = data.interact_id, value = 1}
 				if data.unit.loot_drop and data.unit:loot_drop() and WolfgangHUD:getSetting({"HUDList", "use_dogtag_values"}, true) then
 					self._pickups[key].value = data.unit:loot_drop():value()
-				end
-				if data.unit.greed and data.unit:greed() and data.unit:greed().reserve_left and data.unit:greed():reserve_left() == 0 then -- ignore emptied greed caches as drop-in
-					return
 				end
 				self:_listener_callback("pickup", "add", key, self._pickups[key])
 				self:_pickup_count_event("change", data.interact_id, self._pickups[key].value, self._pickups[key])

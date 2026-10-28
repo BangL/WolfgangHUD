@@ -559,7 +559,7 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 	function HUDListManager:_set_enemy_color(color)
 		local list = self:list("right_side_list"):item("unit_count_list")
 		if list then
-			local map = HUDList.UnitCountItem_MAP
+			local map = HUDListManager.UnitCountItem_MAP
 			for _, item in pairs(list:items()) do
 				local u_id = item:unit_id()
 				if map[u_id] and map[u_id].color_id == "enemy_color" then
@@ -572,7 +572,7 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 	function HUDListManager:_set_special_color(color)
 		local list = self:list("right_side_list"):item("unit_count_list")
 		if list then
-			local map = HUDList.UnitCountItem_MAP
+			local map = HUDListManager.UnitCountItem_MAP
 			for _, item in pairs(list:items()) do
 				local u_id = item:unit_id()
 				if map[u_id] and map[u_id].color_id == "special_color" then
@@ -585,7 +585,7 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 	function HUDListManager:_set_objective_color(color)
 		local list = self:list("right_side_list"):item("unit_count_list")
 		if list then
-			local map = HUDList.UnitCountItem_MAP
+			local map = HUDListManager.UnitCountItem_MAP
 			for _, item in pairs(list:items()) do
 				local u_id = item:unit_id()
 				if map[u_id] and map[u_id].color_id == "objective_color" then
@@ -703,9 +703,9 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 	function HUDListManager:_set_valuable_color(color)
 		local pickup_list = self:list("right_side_list"):item("pickup_list")
 		if pickup_list then
-			local map = HUDList.PickupItem_MAP
+			local map = HUDListManager.PickupItem_MAP
 			for _, item in pairs(pickup_list:items()) do
-				local u_id = item:unit_id()
+				local u_id = item:name()
 				if map[u_id] and map[u_id].color_id == "valuable_color" then
 					item:set_icon_color(color or HUDListManager.ListOptions.valuable_color)
 				end
@@ -715,9 +715,9 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 		-- temp TODO FIXME
 		local list = self:list("right_side_list"):item("loot_list")
 		if list then
-			local map = HUDList.LootItem_MAP
+			local map = HUDListManager.LootItem_MAP
 			for _, item in pairs(list:items()) do
-				local u_id = item:unit_id()
+				local u_id = item:name()
 				if map[u_id] and map[u_id].color_id == "valuable_color" then
 					item:set_icon_color(color or HUDListManager.ListOptions.valuable_color)
 				end
@@ -728,9 +728,9 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 	function HUDListManager:_set_mission_pickup_color(color)
 		local pickup_list = self:list("right_side_list"):item("pickup_list")
 		if pickup_list then
-			local map = HUDList.PickupItem_MAP
+			local map = HUDListManager.PickupItem_MAP
 			for _, item in pairs(pickup_list:items()) do
-				local u_id = item:unit_id()
+				local u_id = item:name()
 				if map[u_id] and map[u_id].color_id == "mission_pickup_color" then
 					item:set_icon_color(color or HUDListManager.ListOptions.mission_pickup_color)
 				end
@@ -741,9 +741,9 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 	function HUDListManager:_set_combat_pickup_color(color)
 		local pickup_list = self:list("right_side_list"):item("pickup_list")
 		if pickup_list then
-			local map = HUDList.PickupItem_MAP
+			local map = HUDListManager.PickupItem_MAP
 			for _, item in pairs(pickup_list:items()) do
-				local u_id = item:unit_id()
+				local u_id = item:name()
 				if map[u_id] and map[u_id].color_id == "combat_pickup_color" then
 					item:set_icon_color(color or HUDListManager.ListOptions.combat_pickup_color)
 				end
@@ -754,9 +754,9 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 	function HUDListManager:_set_revive_pickup_color(color)
 		local pickup_list = self:list("right_side_list"):item("pickup_list")
 		if pickup_list then
-			local map = HUDList.PickupItem_MAP
+			local map = HUDListManager.PickupItem_MAP
 			for _, item in pairs(pickup_list:items()) do
-				local u_id = item:unit_id()
+				local u_id = item:name()
 				if map[u_id] and map[u_id].color_id == "revive_pickup_color" then
 					item:set_icon_color(color or HUDListManager.ListOptions.revive_pickup_color)
 				end
@@ -767,9 +767,9 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 	function HUDListManager:_set_flare_color(color)
 		local pickup_list = self:list("right_side_list"):item("pickup_list")
 		if pickup_list then
-			local map = HUDList.PickupItem_MAP
+			local map = HUDListManager.PickupItem_MAP
 			for _, item in pairs(pickup_list:items()) do
-				local u_id = item:unit_id()
+				local u_id = item:name()
 				if map[u_id] and map[u_id].color_id == "flare_color" then
 					item:set_icon_color(color or HUDListManager.ListOptions.flare_color)
 				end
@@ -1848,7 +1848,7 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 		local total_count = 0
 		for _, data in pairs(managers.gameinfo:get_loot()) do
 			if self._loot_types[data.carry_id] then
-				total_count = total_count + 1
+				total_count = total_count + (data.count or 1)
 			end
 		end
 
@@ -1886,7 +1886,7 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 		local total_count = 0
 		for _, data in pairs(managers.gameinfo:get_pickups()) do
 			if self._pickup_types[data.interact_id] then
-				total_count = total_count + 1
+				total_count = total_count + (data.value or 1)
 			end
 		end
 

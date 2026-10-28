@@ -88,8 +88,12 @@ if not _G.WolfgangHUD then
 			end
 
 			local settings = json.decode(file:read("*all"))
-			parse_settings(self.settings, settings, {})
 			file:close()
+			if type(settings) == "table" then
+				parse_settings(self.settings, settings, {})
+			else
+				corrupted = true
+			end
 		else
 			self:print_log("Error while loading, settings file could not be opened (" .. self.settings_path .. ")", "error")
 		end

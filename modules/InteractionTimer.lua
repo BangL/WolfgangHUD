@@ -79,7 +79,7 @@ if string.lower(RequiredScript) == "lib/units/beings/player/states/playerstandar
 		if PlayerStandard.SHOW_RELOAD and not hide_int_state[managers.player:current_state()] then
 			if self._equipped_unit and not self._equipped_unit:base():clip_full() then
 				self._state_data.show_reload = true
-				managers.hud:show_interaction_bar(0, self._state_data.reload_expire_t or 0, true)
+				managers.hud:show_interaction_bar(0, (self._state_data.reload_expire_t or t) - t, true)
 				self._state_data.reload_offset = t
 			end
 		end
