@@ -76,7 +76,9 @@ if not WolfgangHUD.Downs then
 		if not damage or not damage.get_revives then
 			return
 		end
-		local data = {r = damage:get_revives(), m = self:own_max()}
+		-- t: the toughness skill is ready (the game colors the own icon gold then), nothing else tells the others
+		local panel = managers.hud and managers.hud._teammate_panels[HUDManager.PLAYER_PANEL]
+		local data = {r = damage:get_revives(), m = self:own_max(), t = panel and panel._downs_icon_color and 1 or 0}
 		if peer_id then
 			WolfgangHUD.Sync:send_to_peer(peer_id, self.EVENT_OWN, data)
 		else
@@ -138,7 +140,15 @@ if not WolfgangHUD.Downs then
 	function Downs:get(key)
 		local entry = key and self.data[key]
 		if entry then
-			return entry.r, entry.m
+			local remaining = math.max(entry.r, 0)
+			-- counted: the maximum is a guess (the revenant skill adds a life nobody tells us about), so someone
+			-- who is still around after the counted lives were used up has one more, the last one.
+			-- (The values are the game's: they include that last life, the symbol shows one less: 4 -> "3",
+			-- 5 with revenant -> "4", 1 -> "0" = last life, in red.)
+			if not entry.exact and not entry.dead and remaining < 1 then
+				remaining = 1
+			end
+			return remaining, entry.m, entry.t, entry.dead
 		end
 		local max = self:default_max()
 		return max, max
@@ -150,7 +160,9 @@ if not WolfgangHUD.Downs then
 	WolfgangHUD.SyncListeners[Downs.EVENT_OWN] = function(peer_id, data)
 		local r, m = tonumber(data.r), tonumber(data.m)
 		if r then
-			Downs.data[peer_id] = {r = r, m = m or Downs:default_max(), exact = true}
+			r = math.max(r, 0)
+			Downs.data[peer_id] = {r = r, m = math.max(m or Downs:default_max(), r), exact = true, t = tonumber(data.t) == 1,
+				dead = Downs.data[peer_id] and Downs.data[peer_id].dead and r == 0 or nil}
 			Downs:refresh_panels()
 		end
 	end
@@ -197,6 +209,13 @@ if string.lower(RequiredScript) == "lib/managers/hudmanagerpd2" then
 	local set_player_downs_original = HUDManager.set_player_downs
 	function HUDManager:set_player_downs(...)
 		set_player_downs_original(self, ...)
+		WolfgangHUD.Downs:send_own()
+	end
+
+	-- the toughness skill got ready / was used up
+	local override_player_down_color_original = HUDManager.override_player_down_color
+	function HUDManager:override_player_down_color(...)
+		override_player_down_color_original(self, ...)
 		WolfgangHUD.Downs:send_own()
 	end
 
@@ -296,14 +315,14 @@ elseif string.lower(RequiredScript) == "lib/managers/hud/hudteammatebase" then
 		if not indicator then
 			return
 		end
-		local remaining = WolfgangHUD.Downs:get(self:peer_id())
-		-- 0 = in custody / dead, nothing left to show
-		local visible = remaining > 0 and WolfgangHUD:getSetting(self._downs_setting, true)
+		local remaining, _, toughness, dead = WolfgangHUD.Downs:get(self:peer_id())
+		-- 0 is still alive (the last bleedout, the red icon), only in custody / dead there is nothing to show
+		local visible = not dead and WolfgangHUD:getSetting(self._downs_setting, true)
 		indicator:set_visible(visible)
 		if visible then
 			local guis = tweak_data.gui:get_full_gui_data(HUDTeammatePeer.DOWN_ICON .. math.clamp(remaining, 1, 5))
 			indicator:set_image(guis.texture, unpack(guis.texture_rect))
-			indicator:set_color(guis.color)
+			indicator:set_color(toughness and tweak_data.gui.colors.raid_gold or guis.color)
 		end
 	end
 
