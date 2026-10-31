@@ -1,3 +1,6 @@
+v2.45.1:
+- KillCounter: kill count is aligned correctly for bots and humans (also on first show)
+
 v2.45.0:
 - Downs: red icon at the last life, toughness state is synced
 

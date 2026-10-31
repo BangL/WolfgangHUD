@@ -159,27 +159,31 @@ elseif string.lower(RequiredScript) == "lib/managers/hud/hudteammatebase" then
 		end
 	end
 
+	function HUDTeammateBase:_align_kills_panel(x)
+		local is_ai = self:is_ai()
+		if is_ai and self._full_health_bar_w then
+			-- bots: right-aligned with the health bar
+			self._kills_panel:set_right(self._full_health_bar_w + 2)
+		elseif managers.hud:wolfganghud_layout_is_vanilla() then
+			self._kills_panel:set_right((self._right_panel:w() - (x or self._object:x())) - 60) -- fix for ai panels alignment if human_teammates_exist (see HUDManager:_layout_teammate_panels())
+		elseif managers.hud:wolfganghud_layout_is_pd2() and is_ai then
+			self._kills_panel:set_right(self._right_panel:w() - 60)
+		end
+		if self._player_name and (is_ai or WolfgangHUD:getSetting({ "HUD", "LEVELS_BEFORE_NAME" }, true)) then
+			self._kills_panel:set_center_y(self._player_name:center_y())
+		end
+	end
+
 	function HUDTeammateBase:set_x(x)
 		set_x_original(self, x)
 		if alive(self._kills_panel) then
-			local is_ai = self:is_ai()
-			if managers.hud:wolfganghud_layout_is_vanilla() then
-				self._kills_panel:set_right((self._right_panel:w() - x) - 60) -- fix for ai panels alignment if human_teammates_exist (see HUDManager:_layout_teammate_panels())
-			elseif managers.hud:wolfganghud_layout_is_pd2() and is_ai then
-				self._kills_panel:set_right(self._right_panel:w() - 60)
-			end
-			if self._player_name and (is_ai or WolfgangHUD:getSetting({ "HUD", "LEVELS_BEFORE_NAME" }, true)) then
-				self._kills_panel:set_y(self._player_name:y() + 1)
-			end
+			self:_align_kills_panel(x)
 		end
 	end
 
 	function HUDTeammateBase:_init_killcount()
 		local right_panel = self._right_panel
 		local y = right_panel:h() - self.KILLCOUNTER_FONT_SIZE
-		if self._player_name and (self:is_ai() or WolfgangHUD:getSetting({ "HUD", "LEVELS_BEFORE_NAME" }, true)) then
-			y = self._player_name:y() + 1
-		end
 		self._kills_panel = right_panel:panel({
 			name = "kills_panel",
 			visible = WolfgangHUD:ShowHudElements() and not WolfgangHUD:getSetting({"HUD", self._setting_prefix, "KILLCOUNTER", "HIDE"}, false),
@@ -213,6 +217,7 @@ elseif string.lower(RequiredScript) == "lib/managers/hud/hudteammatebase" then
 			font_size = self.KILLCOUNTER_FONT_SIZE,
 			font = tweak_data.gui.fonts[self.KILLCOUNTER_FONT]
 		})
+		self:_align_kills_panel()
 		self:reset_kill_count()
 	end
 
