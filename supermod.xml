@@ -9,7 +9,7 @@
 
 	<updates>
 		<update identifier="wolfganghud">
-			<host meta="https://raw.githubusercontent.com/BangL/raid-mods-meta/main/wolfganghud.json"/>
+			<host meta="https://raw.githubusercontent.com/BangL/raid-mods-meta/main/wolfganghud.json" patchnotes="https://github.com/BangL/WolfgangHUD/blob/raidww2/CHANGELOG.md"/>
 		</update>
 	</updates>
 	<dependencies>
