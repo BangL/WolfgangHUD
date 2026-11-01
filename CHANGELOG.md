@@ -1,3 +1,6 @@
+v2.47.6:
+- Fix: end stats relay of the host was too long for LuaNetworking (255 chars), now one message per player
+
 v2.47.5:
 - Fix: crash in name label colorizing when the unit has no criminal data (leave/join)
 
