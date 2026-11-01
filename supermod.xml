@@ -61,6 +61,7 @@
 				<post hook_id="lib/managers/hud/hudteammateplayer" />
 				<post hook_id="lib/units/beings/player/huskplayermovement" />
 				<post hook_id="lib/managers/hud/hudnamelabel" />
+				<post hook_id="lib/managers/trademanager" />
 			</group>
 
 			<group :script_path="HUDLayoutPD2.lua">

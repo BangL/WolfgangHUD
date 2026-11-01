@@ -64,6 +64,58 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudteammatebase" then
         end
     end
 
+    -- time until a dead human player is respawned (bots: BotsHaveFeelingsReborn), shown right of the name
+    function HUDTeammateBase:wh_set_respawn_timer(character_name)
+        if self:is_ai() or not (alive(self._right_panel) and alive(self._player_name)) then
+            return
+        end
+
+        local text = self._right_panel:child("wh_respawn_text")
+        if not text then
+            text = self._right_panel:text({
+                name = "wh_respawn_text",
+                align = "left",
+                vertical = "center",
+                font = self._player_name:font(),
+                font_size = self._player_name:font_size(),
+                color = Color.white,
+                layer = 1,
+                visible = false,
+            })
+        end
+
+        self._wh_respawn_name = character_name
+        text:stop()
+        text:set_visible(true)
+        text:animate(callback(self, self, "wh_animate_respawn_timer"))
+    end
+
+    function HUDTeammateBase:wh_animate_respawn_timer(text)
+        while alive(text) and managers.trade:is_criminal_in_custody(self._wh_respawn_name) do
+            local seconds = math.floor(managers.trade:respawn_delay_by_name(self._wh_respawn_name))
+
+            -- 0 = waiting for the trade to be allowed (e.g. stealth)
+            text:set_text(seconds > 0 and string.format("%d:%02d", math.floor(seconds / 60), seconds % 60) or "...")
+            local _, _, w, h = text:text_rect()
+            text:set_size(w, h)
+            if alive(self._player_name) then
+                local name_w = select(3, self._player_name:text_rect())
+                text:set_left(self._player_name:x() + math.min(name_w, self._player_name:w()) + 40)
+                text:set_center_y(self._player_name:center_y())
+            end
+
+            local t = 0
+            while t < 0.25 do
+                t = t + coroutine.yield()
+            end
+        end
+
+        self._wh_respawn_name = nil
+        if alive(text) then
+            text:set_visible(false)
+        end
+    end
+
     function HUDTeammateBase:wh_set_unit(unit)
         if alive(unit) and managers.criminals and alive(self._player_name) then
             local color_id = WolfgangHUD:character_color_id(unit, self._id)
@@ -216,4 +268,13 @@ elseif string.lower(RequiredScript) == "lib/managers/hud/hudnamelabel" then
         self:wh_colorize()
         return show_original(self, ...)
     end
+elseif string.lower(RequiredScript) == "lib/managers/trademanager" then
+    Hooks:PostHook(TradeManager, "on_player_criminal_death", "WolfgangHUD_TradeManager_on_player_criminal_death", function(self, criminal_name)
+        local crim_data = managers.criminals:character_data_by_name(criminal_name)
+        local panel = crim_data and managers.hud and managers.hud._teammate_panels[crim_data.panel_id]
+
+        if panel and panel.wh_set_respawn_timer then
+            panel:wh_set_respawn_timer(criminal_name)
+        end
+    end)
 end
