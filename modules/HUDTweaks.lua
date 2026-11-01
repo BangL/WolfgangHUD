@@ -120,4 +120,40 @@ elseif string.lower(RequiredScript) == "lib/managers/hud/hudnamelabel" then
             self._object:set_w(HUDNameLabel.WH_W)
         end
     end
+
+    function HUDNameLabel:wh_colorize()
+        local unit = self._movement and self._movement._unit
+        if not (alive(unit) and alive(self._character_name) and managers.criminals and tweak_data.chat_colors) then
+            return
+        end
+        if not WolfgangHUD:getSetting({ "HUD", "COLORIZE_NAMES" }, true) then
+            return
+        end
+
+        local data = managers.criminals:character_data_by_unit(unit)
+        if data and data.ai then
+            self._character_name:set_color(Color.white)
+            return
+        end
+
+        local color_id = WolfgangHUD:character_color_id(unit)
+        local color = color_id and tweak_data.chat_colors[color_id]
+        if color then
+            self._character_name:set_color(color)
+        end
+    end
+
+    local refresh_original = HUDNameLabel.refresh
+
+    function HUDNameLabel:refresh(...)
+        self:wh_colorize()
+        return refresh_original(self, ...)
+    end
+
+    local show_original = HUDNameLabel.show
+
+    function HUDNameLabel:show(...)
+        self:wh_colorize()
+        return show_original(self, ...)
+    end
 end
