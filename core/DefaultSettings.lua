@@ -193,6 +193,7 @@ if WolfgangHUD then
 		HOST = {
 			INSTANT_RESTART						= true,
 			KICK_A_FRIEND						= true,
+			FORCE_READY							= true,
 		},
 		SOUND = {
 			MUTE_TOASTS							= true,

@@ -149,6 +149,10 @@
 				<post hook_id="lib/units/pickups/healthpackpickup"/>
 			</group>
 
+			<group :script_path="ForceReady.lua">
+				<post hook_id="lib/managers/menu/raid_menu/readyupgui"/>
+			</group>
+
 			<group :script_path="ReadyOnNumEnter.lua">
 				<post hook_id="lib/managers/hud/hudchat"/>
 			</group>

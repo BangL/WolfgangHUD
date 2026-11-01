@@ -1754,6 +1754,14 @@ if WolfgangHUD then
 					},
 					{
 						type = "toggle",
+						name_id = "wolfganghud_force_ready_title",
+						desc_id = "wolfganghud_force_ready_desc",
+						value = {"HOST", "FORCE_READY"},
+						visible_reqs = {},
+						enabled_reqs = {},
+					},
+					{
+						type = "toggle",
 						name_id = "wolfganghud_instant_restart_title",
 						desc_id = "wolfganghud_instant_restart_desc",
 						value = {"HOST", "INSTANT_RESTART"},
