@@ -83,10 +83,12 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudteammatebase" then
                 name = "wh_respawn_text",
                 align = "left",
                 vertical = "center",
-                font = self._player_name:font(),
-                font_size = self._player_name:font_size(),
+                font = tweak_data.gui.fonts.din_compressed_outlined_22,
+                font_size = 22,
                 color = Color.white,
                 layer = 1,
+                w = 80,
+                h = 24,
                 visible = false,
             })
         end
@@ -94,6 +96,7 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudteammatebase" then
         self._wh_respawn_name = character_name
         text:stop()
         text:set_visible(true)
+
         text:animate(callback(self, self, "wh_animate_respawn_timer"))
     end
 
@@ -101,10 +104,8 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudteammatebase" then
         while alive(text) and managers.trade:is_criminal_in_custody(self._wh_respawn_name) do
             local seconds = math.floor(managers.trade:respawn_delay_by_name(self._wh_respawn_name))
 
-            -- 0 = waiting for the trade to be allowed (e.g. stealth)
-            text:set_text(seconds > 0 and string.format("%d:%02d", math.floor(seconds / 60), seconds % 60) or "...")
-            local _, _, w, h = text:text_rect()
-            text:set_size(w, h)
+            -- 0 = waiting for the trade to be allowed (e.g. stealth): show nothing
+            text:set_text(seconds > 0 and string.format("%d:%02d", math.floor(seconds / 60), seconds % 60) or "")
             if alive(self._player_name) then
                 local name_w = select(3, self._player_name:text_rect())
                 text:set_left(self._player_name:x() + math.min(name_w, self._player_name:w()) + 40)
