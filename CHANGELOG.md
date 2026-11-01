@@ -1,3 +1,10 @@
+v2.46.0:
+- Health numbers on the health bars of you, teammates and bots (option "Show health numbers")
+- Respawn timer next to the name of dead players
+- Overhead name labels are colorized (bots stay white)
+- Free play: XP shown on the operation list items
+- Ping and accuracy label sit below the health bar, mirroring the killcounter
+
 v2.45.2:
 - Fix: crash in the weapon skill preview when hovering skill buttons without value data
 
