@@ -53,6 +53,13 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudteammatebase" then
                 w = health_panel:w(),
                 h = 24,
             })
+        end
+
+        -- center on the bar itself, the panel can be wider than the bar (bots)
+        local bg = health_panel:child("health_background")
+        if bg then
+            text:set_center(health_panel:x() + bg:center_x(), health_panel:y() + bg:center_y())
+        else
             text:set_center(health_panel:center_x(), health_panel:center_y())
         end
 
