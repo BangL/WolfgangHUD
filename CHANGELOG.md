@@ -1,3 +1,8 @@
+v2.47.0:
+- Host: option "Force start button" in the ready up screen
+- Fix: stacked gold crates are counted correctly in Trainwreck
+- Fix: bot health numbers are centered on the bar
+
 v2.46.0:
 - Health numbers on the health bars of you, teammates and bots (option "Show health numbers")
 - Respawn timer next to the name of dead players
