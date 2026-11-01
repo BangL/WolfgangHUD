@@ -806,11 +806,18 @@ if string.lower(RequiredScript) == "lib/setups/setup" then
 		end
 	end
 
+	-- stacks that stay one unit with a fixed editor id (Trainwreck) carry their size in a damage variable
+	function GameInfoManager._get_stack_size(unit)
+		local damage = alive(unit) and unit:damage()
+		local size = damage and damage._variables and damage._variables.var_stacksize
+		return type(size) == "number" and size > 0 and size or nil
+	end
+
 	function GameInfoManager:_loot_interaction_handler(event, key, data)
 		if event == "add" then
 			if not self._loot[key] then
 				local composite_lookup = GameInfoManager._INTERACTIONS.COMPOSITE_LOOT_UNITS
-				local count = composite_lookup[data.editor_id % 1000000] or composite_lookup[data.interact_id] or 1
+				local count = composite_lookup[data.editor_id % 1000000] or composite_lookup[data.interact_id] or GameInfoManager._get_stack_size(data.unit) or 1
 
 				self._loot[key] = {unit = data.unit, carry_id = data.carry_id, count = count }
 				self:_listener_callback("loot", "add", key, self._loot[key])
@@ -823,7 +830,7 @@ if string.lower(RequiredScript) == "lib/setups/setup" then
 				self._loot[key] = nil
 			elseif event == "interact" then
 				local composite_lookup = GameInfoManager._INTERACTIONS.COMPOSITE_LOOT_UNITS
-				local count = composite_lookup[data.editor_id % 1000000] or composite_lookup[data.interact_id] or 1
+				local count = composite_lookup[data.editor_id % 1000000] or composite_lookup[data.interact_id] or GameInfoManager._get_stack_size(data.unit) or 1
 				local change = count - self._loot[key].count
 
 				self._loot[key].count = count
