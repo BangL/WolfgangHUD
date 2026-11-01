@@ -26,7 +26,13 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudteammatepeer" then
             font_size = self.PING_FONT_SIZE,
             font = tweak_data.gui.fonts[self.PING_FONT]
         })
-        ping_panel:set_bottom(self._right_panel:h())
+        -- mirror the killcounter (centered on the name): same distance to the health bar, below it
+        local health_panel = self._right_panel:child("health_panel")
+        if health_panel and alive(self._player_name) then
+            ping_panel:set_center_y(2 * health_panel:center_y() - self._player_name:center_y())
+        else
+            ping_panel:set_bottom(self._right_panel:h())
+        end
     end
 
     function HUDTeammatePeer:update_ping_info(t, dt)

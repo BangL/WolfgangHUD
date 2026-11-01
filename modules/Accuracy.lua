@@ -95,6 +95,11 @@ elseif string.lower(RequiredScript) == "lib/managers/hud/hudteammateplayer" then
 			font_size = self.ACCURACY_FONT_SIZE,
 			font = tweak_data.gui.fonts[self.ACCURACY_FONT]
 		})
+		-- mirror the killcounter (centered on the name): same distance to the health bar, below it
+		local health_panel = right_panel:child("health_panel")
+		if health_panel and alive(self._player_name) then
+			self._accuracy_panel:set_center_y(2 * health_panel:center_y() - self._player_name:center_y())
+		end
 		self:set_accuracy(0)
 	end
 
