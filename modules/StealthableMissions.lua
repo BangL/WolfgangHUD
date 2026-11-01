@@ -88,6 +88,31 @@ elseif string.lower(RequiredScript) == "lib/managers/menu/raid_menu/controls/rai
     function RaidGUIControlListItemOperations:_layout_operation_name(params, data, ...)
         _layout_operation_name_original(self, params, data, ...)
         self:wghud_refresh_stealthable_icon()
+        self:wghud_layout_free_play_exp(data)
+    end
+
+    -- free play entries show their XP right on the list item, like raids (RaidGUIControlListItemRaids:_layout_exp)
+    function RaidGUIControlListItemOperations:wghud_layout_free_play_exp(data)
+        local xp_value = data.free_play and data.mission_data and data.mission_data.xp
+        if not xp_value or xp_value <= 0 then
+            return
+        end
+
+        self._exp_label = self._object:text({
+            align = "right",
+            color = tweak_data.gui.colors.raid_grey,
+            font = tweak_data.gui.fonts.din_compressed,
+            font_size = tweak_data.gui.font_sizes.small,
+            name = "list_item_exp_label_" .. self._name,
+            text = utf8.to_upper(xp_value .. " XP"),
+            vertical = "center",
+        })
+
+        local _, _, w, h = self._exp_label:text_rect()
+
+        self._exp_label:set_size(w, h)
+        self._exp_label:set_right(self._item_label:w() - 20)
+        self._exp_label:set_center_y(RaidGUIControlListItemOperations.DIFFICULTY_CENTER_Y)
     end
 
     function RaidGUIControlListItemOperations:wghud_init_stealthable_icon()
