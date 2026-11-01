@@ -1,3 +1,6 @@
+v2.47.1:
+- Fix: crash in the ready up screen (force start button visibility check)
+
 v2.47.0:
 - Host: option "Force start button" in the ready up screen
 - Fix: stacked gold crates are counted correctly in Trainwreck

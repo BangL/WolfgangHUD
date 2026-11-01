@@ -122,7 +122,8 @@ if string.lower(RequiredScript) == "lib/managers/menu/raid_menu/readyupgui" then
 		update_original(self, ...)
 
 		local button = self._wh_force_ready_button
-		if button and alive(button._object) then
+		local object = button and button._object
+		if object and (not object.alive or alive(object)) then
 			local show = WolfgangHUD:getSetting({"HOST", "FORCE_READY"}, true)
 				and self._ready
 				and not managers.challenge_cards:did_everyone_locked_sugested_card()
