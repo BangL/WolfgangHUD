@@ -1,3 +1,10 @@
+v2.47.4:
+- Fix: AI health text is shown as percentage and capped at 100% (BotsHaveFeelingsReborn can give clients more health than max)
+
+v2.47.3:
+- Fix: crash as client when the host dies (respawn timer)
+- No text while waiting for trade
+
 v2.47.2:
 - Fix: possible crash when dying as client (respawn timer is no longer set up for your own death)
 

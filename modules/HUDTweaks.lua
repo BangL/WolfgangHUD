@@ -64,8 +64,9 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudteammatebase" then
         end
 
         text:set_visible(true)
-        if data.total > 0 and data.total <= 1 then
-            text:set_text(string.format("%d%%", math.ceil(data.current / data.total * 100)))
+        if data.total > 0 and (data.total <= 1 or self:is_ai()) then
+            -- capped: BHFR can give clients more health than max
+            text:set_text(string.format("%d%%", math.min(100, math.ceil(data.current / data.total * 100))))
         else
             text:set_text(string.format("%d / %d", math.ceil(data.current), math.ceil(data.total)))
         end
