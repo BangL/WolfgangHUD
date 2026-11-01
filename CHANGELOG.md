@@ -1,3 +1,6 @@
+v2.47.2:
+- Fix: possible crash when dying as client (respawn timer is no longer set up for your own death)
+
 v2.47.1:
 - Fix: crash in the ready up screen (force start button visibility check)
 

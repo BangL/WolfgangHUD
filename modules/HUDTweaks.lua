@@ -280,7 +280,8 @@ elseif string.lower(RequiredScript) == "lib/managers/trademanager" then
         local crim_data = managers.criminals:character_data_by_name(criminal_name)
         local panel = crim_data and managers.hud and managers.hud._teammate_panels[crim_data.panel_id]
 
-        if panel and panel.wh_set_respawn_timer then
+        -- own death: the custody screen has its own timer, the own panel is being rebuilt then
+        if panel and panel.wh_set_respawn_timer and criminal_name ~= managers.criminals:local_character_name() then
             panel:wh_set_respawn_timer(criminal_name)
         end
     end)
