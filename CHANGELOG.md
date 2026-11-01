@@ -1,3 +1,6 @@
+v2.47.5:
+- Fix: crash in name label colorizing when the unit has no criminal data (leave/join)
+
 v2.47.4:
 - Fix: AI health text is shown as percentage and capped at 100% (BotsHaveFeelingsReborn can give clients more health than max)
 

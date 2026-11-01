@@ -237,6 +237,9 @@ if not _G.WolfgangHUD then
 			-- by panels (local)
 			if not panel_id then
 				local data = managers.criminals:character_data_by_unit(unit)
+				if not data then
+					return nil
+				end
 				panel_id = data.ai and 0 or (data.panel_id or HUDManager.PLAYER_PANEL)
 			end
 			return #tweak_data.chat_colors - panel_id
