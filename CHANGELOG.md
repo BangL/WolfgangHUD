@@ -1,3 +1,6 @@
+v2.45.2:
+- Fix: crash in the weapon skill preview when hovering skill buttons without value data
+
 v2.45.1:
 - KillCounter: kill count is aligned correctly for bots and humans (also on first show)
 

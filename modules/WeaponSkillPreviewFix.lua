@@ -17,9 +17,10 @@ function WeaponSelectionGui:_get_marked_row_skill_button(i_skill, ...)
         local button_state = skill_button:get_state()
         local counts = button_state == RaidGUIControlButtonWeaponSkill.STATE_INVISIBLE
             or (skill_button:visible() and (button_state == RaidGUIControlButtonWeaponSkill.STATE_ACTIVE or button_state == RaidGUIControlButtonWeaponSkill.STATE_SELECTED))
-        local value = skill_button:get_data().value.value
+        local data = counts and skill_button:get_data()
+        local value = data and data.value and data.value.value
 
-        if counts and max_skill_value < value then
+        if value and max_skill_value < value then
             max_skill_value = value
             weapon_skill_button = skill_button
         end
