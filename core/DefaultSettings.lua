@@ -6,6 +6,7 @@ if WolfgangHUD then
 			COLORIZE_NAMES						= true,
 			COLORIZE_MODE						= 1,
 			LEVELS_BEFORE_NAME					= true,
+			HEALTH_NUMBERS						= true,
 			PLAYER = {
 				SHOW_ACCURACY					= true,
 				KILLCOUNTER = {

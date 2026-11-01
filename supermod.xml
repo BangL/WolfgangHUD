@@ -56,6 +56,7 @@
 		<group script_path="modules/">
 			<group :script_path="HUDTweaks.lua">
 				<post hook_id="lib/managers/hud/hudteammatebase" />
+				<post hook_id="lib/managers/hud/hudteammateai" />
 				<post hook_id="lib/managers/hud/hudteammatepeer" />
 				<post hook_id="lib/managers/hud/hudteammateplayer" />
 				<post hook_id="lib/units/beings/player/huskplayermovement" />

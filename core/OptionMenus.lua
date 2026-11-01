@@ -1306,6 +1306,14 @@ if WolfgangHUD then
 					},
 					{
 						type = "toggle",
+						name_id = "wolfganghud_health_numbers_title",
+						desc_id = "wolfganghud_health_numbers_desc",
+						value = {"HUD", "HEALTH_NUMBERS"},
+						visible_reqs = {},
+						enabled_reqs = {},
+					},
+					{
+						type = "toggle",
 						name_id = "wolfganghud_hide_in_camp_title",
 						desc_id = "wolfganghud_hide_in_camp_desc",
 						value = {"HUD", "SHOW_IN_CAMP"},

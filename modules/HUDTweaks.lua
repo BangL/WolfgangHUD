@@ -25,6 +25,45 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudteammatebase" then
         end
     end
 
+    -- numeric HP centered on the health bar; lives on the right panel, the health panel clips its children
+    function HUDTeammateBase:wh_update_health_text(data)
+        local right_panel = alive(self._right_panel) and self._right_panel
+        local health_panel = right_panel and right_panel:child("health_panel")
+        if not health_panel then
+            return
+        end
+
+        local text = right_panel:child("wh_health_text")
+        if not WolfgangHUD:getSetting({ "HUD", "HEALTH_NUMBERS" }, true) then
+            if text then
+                text:set_visible(false)
+            end
+            return
+        end
+
+        if not text then
+            text = right_panel:text({
+                name = "wh_health_text",
+                align = "center",
+                vertical = "center",
+                font = tweak_data.gui.fonts.din_compressed_outlined_22,
+                font_size = 22,
+                color = Color.white,
+                layer = health_panel:layer() + 10,
+                w = health_panel:w(),
+                h = 24,
+            })
+            text:set_center(health_panel:center_x(), health_panel:center_y())
+        end
+
+        text:set_visible(true)
+        if data.total > 0 and data.total <= 1 then
+            text:set_text(string.format("%d%%", math.ceil(data.current / data.total * 100)))
+        else
+            text:set_text(string.format("%d / %d", math.ceil(data.current), math.ceil(data.total)))
+        end
+    end
+
     function HUDTeammateBase:wh_set_unit(unit)
         if alive(unit) and managers.criminals and alive(self._player_name) then
             local color_id = WolfgangHUD:character_color_id(unit, self._id)
@@ -37,6 +76,13 @@ if string.lower(RequiredScript) == "lib/managers/hud/hudteammatebase" then
         end
     end
 elseif string.lower(RequiredScript) == "lib/managers/hud/hudteammatepeer" then
+    local set_health_original = HUDTeammatePeer.set_health
+
+    function HUDTeammatePeer:set_health(data, ...)
+        set_health_original(self, data, ...)
+        self:wh_update_health_text(data)
+    end
+
     local set_name_original = HUDTeammatePeer.set_name
     local set_level_original = HUDTeammatePeer.set_level
 
@@ -84,11 +130,25 @@ elseif string.lower(RequiredScript) == "lib/managers/hud/hudteammateplayer" then
         end
     end
 
+    local set_health_original = HUDTeammatePlayer.set_health
+
+    function HUDTeammatePlayer:set_health(data, ...)
+        set_health_original(self, data, ...)
+        self:wh_update_health_text(data)
+    end
+
     function HUDTeammatePlayer:set_level(level, ...)
         set_level_original(self, level, ...)
         if WolfgangHUD:getSetting({ "HUD", "LEVELS_BEFORE_NAME" }, true) then
             self:wh_refresh_level(true)
         end
+    end
+elseif string.lower(RequiredScript) == "lib/managers/hud/hudteammateai" then
+    local set_health_original = HUDTeammateAI.set_health
+
+    function HUDTeammateAI:set_health(data, ...)
+        set_health_original(self, data, ...)
+        self:wh_update_health_text(data)
     end
 elseif string.lower(RequiredScript) == "lib/units/beings/player/huskplayermovement" then
     local set_character_anim_variables_original = HuskPlayerMovement.set_character_anim_variables
