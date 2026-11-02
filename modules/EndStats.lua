@@ -162,19 +162,7 @@ if string.lower(RequiredScript) == "lib/managers/statisticsmanager" then
 		end
 
 		self._relay = {peers = known}
-		self:send_relay()
-	end
-
-	-- One message per player: all of them together exceed the 255 byte limit of LuaNetworking
-	function EndStats:send_relay(to_peer_id)
-		for id, stats in pairs(self._relay.peers) do
-			local data = {peers = {[id] = stats}}
-			if to_peer_id then
-				WolfgangHUD.Sync:send_to_peer(to_peer_id, self.EVENT_RELAY, data)
-			else
-				WolfgangHUD.Sync:send_to_all_discovered_peers(self.EVENT_RELAY, data)
-			end
-		end
+		WolfgangHUD.Sync:send_to_all_discovered_peers(self.EVENT_RELAY, self._relay)
 	end
 
 	function EndStats:start(statistics)
@@ -296,7 +284,7 @@ if string.lower(RequiredScript) == "lib/managers/statisticsmanager" then
 			WolfgangHUD.Sync:send_to_peer(peer_id, EndStats.EVENT_DATA, mine)
 		end
 		if EndStats._relay then
-			EndStats:send_relay(peer_id)
+			WolfgangHUD.Sync:send_to_peer(peer_id, EndStats.EVENT_RELAY, EndStats._relay)
 		end
 	end
 

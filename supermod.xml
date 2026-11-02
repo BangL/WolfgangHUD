@@ -3,8 +3,8 @@
 	description="This is a Mod Collection of HUD altering scripts, as well as quality of life changes to the game and its menus."
 	priority="1"
 	author="BangL"
-	version="2.47.6"
-	min_sblt_version="2.2.0"
+	version="2.47.7"
+	min_sblt_version="2.4.0"
 	color="60 60 60">
 
 	<updates>

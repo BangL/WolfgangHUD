@@ -1,3 +1,7 @@
+v2.47.7:
+- Change: the end stats relay of the host is one message again, LuaNetworking splits long messages since base 2.4.0
+- Requires base 2.4.0
+
 v2.47.6:
 - Fix: end stats relay of the host was too long for LuaNetworking (255 chars), now one message per player
 
